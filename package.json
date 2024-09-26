@@ -1,0 +1,42 @@
+{
+  "name": "hmpps-book-a-prison-visit-staff-e2e-tests",
+  "version": "1.0.0",
+  "description": "Automation suite to test prison visit staff UI using Playwright",
+  "scripts": {
+    "clean:reports": "rimraf allure-results allure-report test-results playwright-report",
+    "pretest": "npm run clean:reports",
+    "test:chrome": "playwright test --project=chromium",
+    "test:chrome:headed": "playwright test --project=chromium --headed",
+    "test:safari:headed": "playwright test --project=webkit --headed",
+    "test:iPhone13": "playwright test --project=mobile_iphone13",
+    "test:iPhone13:headed": "playwright test --project=mobile_iphone13 --headed",
+    "test:nexus7": "playwright test --project=mobile_nexus7",
+    "test:nexus7:headed": "playwright test --project=mobile_nexus7 --headed",
+    "generate:report": "npx allure generate allure-results --clean",
+    "open:report": "npx allure open allure-report",
+    "posttest": "npm run generate:report && npm run open:report",
+    "test": "npm run test:chrome || npm run posttest",
+    "posttest:ci": "rimraf playwright",
+    "test:ci": "cross-env test_env=staging npm run test:chrome"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1.1.1",
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^9.11.1",
+    "@playwright/test": "^1.47.1",
+    "@types/eslint__js": "^8.42.3",
+    "@types/node": "^22.5.5",
+    "allure-commandline": "^2.29.0",
+    "allure-playwright": "^3.0.0-beta.3",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.5",
+    "eslint": "^9.11.1",
+    "eslint-plugin-no-only-tests": "^3.3.0",
+    "globals": "^15.9.0",
+    "mkdirp": "^3.0.1",
+    "prettier": "^3.3.2",
+    "rimraf": "^5.0.7",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.7.0"
+  }
+}

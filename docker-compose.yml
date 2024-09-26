@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  playwright-test:
+    image: playwright
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - $PWD:/app
+    command: npm run test
