@@ -8,7 +8,7 @@ jobs:
     executors:
     pw-jammy-development:
     docker:
-      - image: mcr.microsoft.com/playwright:v1.44.1-jammy
+      - image: mcr.microsoft.com/playwright:v1.47.2-jammy
     circleci_ip_ranges: true
 
     steps:
