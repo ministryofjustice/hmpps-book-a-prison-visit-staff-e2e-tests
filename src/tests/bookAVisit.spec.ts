@@ -6,7 +6,7 @@ test.describe('Staff UI health check', () => {
     test.beforeEach(async ({ loginPage, }) => {
         await loginPage.navigateTo('/')
         await loginPage.checkOnPage('HMPPS Digital Services - Sign in')
-        await loginPage.signInWith('VSIP1_TST', 'Expired19')
+        await loginPage.signInWith('VSIP4_TST', 'DigitalServices2024')
     })
 
     test('Verify links', async ({ homePage }) => {
