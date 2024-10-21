@@ -14,12 +14,12 @@ async function globalSetup(config: FullConfig) {
   switch (process.env.test_env) {
     case 'dev':
       process.env.BASE_URL = Constants.DEV_BASE_URL
-    //   process.env.HMPPS_AUTH_URL = Constants.DEV_HMPPS_AUTH_URL
+      process.env.HMPPS_AUTH_URL = Constants.DEV_HMPPS_AUTH_URL
       process.env.TEST_HELPER_API_URL = Constants.DEV_TEST_HELPER_API_URL
       break
     case 'staging':
       process.env.BASE_URL = Constants.STAGING_BASE_URL
-    //   process.env.HMPPS_AUTH_URL = Constants.STAGING_HMPPS_AUTH_URL
+      process.env.HMPPS_AUTH_URL = Constants.STAGING_HMPPS_AUTH_URL
       process.env.TEST_HELPER_API_URL = Constants.STAGING_TEST_HELPER_API_URL
       break
     default:
