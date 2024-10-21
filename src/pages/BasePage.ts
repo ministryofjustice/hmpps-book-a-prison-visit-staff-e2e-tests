@@ -6,11 +6,13 @@ let deviceName: string | undefined
 export abstract class BasePage {
     protected readonly page: Page
     private readonly pageHeader: Locator
+    private readonly continueButton: Locator
 
     constructor(page: Page) {
         this.page = page
         deviceName = GlobalData.get('deviceName')
-        this.pageHeader = page.locator('h1', { hasText: 'Sign in' })
+        this.pageHeader = page.locator('h1')
+        this.continueButton = page.getByRole('button', { name: 'Continue' })
     }
 
     private async waitForPageToLoad(): Promise<void> {
@@ -25,4 +27,13 @@ export abstract class BasePage {
        const text =  await this.page.title()
         expect(text).toBe(title)
     }
+
+    async headerOnPage(header: string): Promise<void> {
+        const text =  this.pageHeader
+         expect(text).toHaveText(header)
+     }
+     async continueToNextPage(): Promise<void> {
+        await this.continueButton.click()
+      }
+
 }
