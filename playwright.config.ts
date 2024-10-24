@@ -20,13 +20,13 @@ export default defineConfig({
 
   reporter: process.env.CI
     ? [
-        ['junit', { outputFile: 'results.xml' }],
-        ['html', { open: 'never' }],
-      ]
+      ['junit', { outputFile: 'results.xml' }],
+      ['html', { open: 'never' }],
+    ]
     : [
-        ['html', { open: 'never' }],
-        ['allure-playwright', { detail: true, outputFolder: 'allure-results' }],
-      ],
+      ['html', { open: 'never' }],
+      ['allure-playwright', { detail: true, outputFolder: 'allure-results' }],
+    ],
   use: {
     baseURL: ENV.BASE_URL,
     navigationTimeout: 60000,
