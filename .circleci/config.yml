@@ -5,7 +5,6 @@ orbs:
 
 jobs:
   build-and-test:
-    context: playwright-book-a-prison-visit-staff-e2e-ui-tests-staging  
     executors:
     pw-jammy-development:
     docker:
