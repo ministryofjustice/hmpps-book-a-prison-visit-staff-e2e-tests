@@ -27,6 +27,7 @@ jobs:
             - ~/.cache
       - run:
           name: Run Playwright Tests
+          context: playwright-book-a-prison-visit-staff-e2e-ui-tests-staging  
           command: npm run test:ci
       - store_test_results:
           path: results.xml
