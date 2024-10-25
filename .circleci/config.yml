@@ -10,6 +10,7 @@ jobs:
     docker:
       - image: mcr.microsoft.com/playwright:v1.47.2-jammy
     circleci_ip_ranges: true
+    context: playwright-book-a-prison-visit-staff-e2e-ui-tests-staging  
 
     steps:
       - checkout
@@ -37,6 +38,5 @@ jobs:
 
 workflows:
   build-and-test:
-    context: playwright-book-a-prison-visit-staff-e2e-ui-tests-staging  
     jobs:
       - build-and-test
