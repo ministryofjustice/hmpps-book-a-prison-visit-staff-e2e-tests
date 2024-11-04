@@ -6,10 +6,14 @@ export default class HomePage extends BasePage {
 
     constructor(page: Page) {
         super(page)
-        this.bookOrChangeaVisit = page.locator('[href*="/search/prisober"]')
+        this.bookOrChangeaVisit = page.locator('[href*="/search/prisoner"]')
     }
 
     async displayBookOrChangeaVisit(): Promise<void> {
         await this.bookOrChangeaVisit.isVisible()
+    }
+
+    async selectBookOrChangeVisit(): Promise<void> {
+        await this.bookOrChangeaVisit.click()
     }
 }

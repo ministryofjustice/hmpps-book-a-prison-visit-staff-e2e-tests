@@ -22,7 +22,7 @@ create 3 .env files
 .env, .env.dev & .env.staging
 ```
 # These will be set by the setup script
-BASE_URL='' 
+BASE_URL=''
 HMPPS_AUTH_URL=''
 TEST_HELPER_API_URL=''
 TESTING_CLIENT_ID=''
@@ -35,7 +35,6 @@ DEV_PASSWORD="dev_password"
 Update `.env.dev & .env.staging` with below values
 
 TESTING_CLIENT_ID=`xxxxxxxxxx`
-
 TESTING_CLIENT_SECRET=`xxxxxxxxx`
 
 ## Running the Tests
