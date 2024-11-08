@@ -10,6 +10,8 @@ import MainContactPage from '../pages/MainContactPage'
 import BookingMethodPage from '../pages/BookingMethodPage'
 import CheckYourBookingPage from '../pages/CheckYourBookingPage'
 import BookingConfirmationPage from '../pages/BookingConfirmationPage'
+import BookingDetailsPage from '../pages/BookingDetailsPage'
+import CancellationPage from '../pages/CancellationPage'
 
 type PageFixtures = {
     loginPage: LoginPage
@@ -23,6 +25,8 @@ type PageFixtures = {
     bookingMethodPage: BookingMethodPage
     checkYourBookingPage: CheckYourBookingPage
     bookingConfirmationPage: BookingConfirmationPage
+    bookingDetailsPage: BookingDetailsPage
+    cancellationPage: CancellationPage
 
 }
 
@@ -68,6 +72,14 @@ const test = baseTest.extend<PageFixtures>({
 
     bookingConfirmationPage: async ({ page }, use) => {
         await use(new BookingConfirmationPage(page))
+    },
+
+    bookingDetailsPage: async ({ page }, use) => {
+        await use(new BookingDetailsPage(page))
+    },
+
+    cancellationPage: async ({ page }, use) => {
+        await use(new CancellationPage(page))
     }
 })
 
