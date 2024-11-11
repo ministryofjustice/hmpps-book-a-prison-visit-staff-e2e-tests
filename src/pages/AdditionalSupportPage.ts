@@ -4,11 +4,13 @@ import { Locator, Page, expect } from "@playwright/test"
 export default class AddtionalSupportPage extends BasePage {
     private readonly additionalSupportRequired: Locator
     private readonly additionalSupportNotRequired: Locator
+    private readonly additionalSupportDetails: Locator
 
     constructor(page: Page) {
         super(page)
         this.additionalSupportNotRequired = page.locator("#additionalSupportRequired-2")
         this.additionalSupportRequired = page.locator("#additionalSupportRequired")
+        this.additionalSupportDetails = page.locator('input[id$=additionalSupport]')
     }
 
     async selectNoAdditionalSupportRequired(): Promise<void> {
@@ -20,6 +22,7 @@ export default class AddtionalSupportPage extends BasePage {
         await this.additionalSupportRequired.isEnabled()
         await this.additionalSupportRequired.check()
         expect(await this.additionalSupportRequired.isChecked()).toBeTruthy()
+        await this.additionalSupportDetails.fill('Wheelchair')
     }
-
 }
+
