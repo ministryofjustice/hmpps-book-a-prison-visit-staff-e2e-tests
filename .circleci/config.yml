@@ -34,6 +34,7 @@ jobs:
           path: playwright-report/index.html
       - store_artifacts:
           path: test-results
+          destination: playwright-report-first
 
 workflows:
   build-and-test:
