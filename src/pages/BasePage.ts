@@ -10,6 +10,7 @@ export abstract class BasePage {
     private readonly accountMenu: Locator
     private readonly yourAccountLink: Locator
     private readonly signOutLink: Locator
+    private readonly submitButton : Locator
 
     constructor(page: Page) {
         this.page = page
@@ -19,6 +20,7 @@ export abstract class BasePage {
         this.accountMenu = page.locator('[class$=connect-dps-common-header__user-menu-toggle]')
         this.signOutLink = page.getByRole('link', { name: 'Sign out' })
         this.yourAccountLink = page.getByRole('link', { name: 'Your account' })
+        this.submitButton = page.getByRole('button', { name: 'Submit' })
     }
 
     private async waitForPageToLoad(): Promise<void> {
@@ -42,6 +44,10 @@ export abstract class BasePage {
     async signOut(): Promise<void> {
         await this.accountMenu.click()
         await this.signOutLink.click()
+    }
+
+    async clickOnSubmitButton(): Promise<void> {
+        await this.submitButton.click()
     }
 
 }
