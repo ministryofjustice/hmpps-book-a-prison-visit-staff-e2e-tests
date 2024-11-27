@@ -86,10 +86,10 @@ test.describe('Staff should not be able to book visits for non-assocaition priso
         const visitReference = await bookingConfirmationPage.getReferenceNumber()
         GlobalData.set('visitReference', visitReference)
         console.log('Confirmation message:', visitReference)
-        
+
         // Book a visit for a non-association prisoner - A6541DZ & A6038DZ are non-association prisoners
-        
-        await bookingConfirmationPage.clickOnManagePrisonVisits() 
+
+        await bookingConfirmationPage.clickOnManagePrisonVisits()
         await homePage.checkOnPage('Manage prison visits - Manage prison visits')
         await homePage.selectBookOrChangeVisit()
         await searchPage.enterPrisonerNumber('A6541DZ')
@@ -104,6 +104,9 @@ test.describe('Staff should not be able to book visits for non-assocaition priso
         expect(await selectDateTimePage.checkOnPage('Manage prison visits - Select date and time of visit'))
         expect(await selectDateTimePage.headerOnPage('Select date and time of visit'))
         await selectDateTimePage.assertLastSelectedDateTimeNotDisplayed()
+        await selectDateTimePage.clearContext()
+        await selectDateTimePage.signOut()
+
     })
 })
 

@@ -21,9 +21,15 @@ export default class SelectDateTimePage extends BasePage {
 
     // Get a value from the context
     async getContext(key: string): Promise<string | undefined> {
-        const value = this.contextStorage.get(key);
-        console.log(`Context retrieved: ${key} = ${value}`);
+        const value = this.contextStorage.get(key)
+        console.log(`Context retrieved: ${key} = ${value}`)
         return value; // Return the value from storage
+    }
+
+    // Clear the context after the test run
+    async clearContext(): Promise<void> {
+        this.contextStorage.clear()
+        console.log("Context cleared.")
     }
 
     async selectNonAssociationTimeSlot(): Promise<void> {
@@ -43,7 +49,7 @@ export default class SelectDateTimePage extends BasePage {
     }
 
     async assertLastSelectedDateTimeNotDisplayed(): Promise<void> {
-        const slotDateTime = await this.getContext('SLOT_DATE_TIME');
+        const slotDateTime = await this.getContext('SLOT_DATE_TIME')
         if (slotDateTime) {
             console.log(`Checking if SLOT_DATE_TIME (${slotDateTime}) is not displayed on the page`)
 
@@ -52,9 +58,9 @@ export default class SelectDateTimePage extends BasePage {
                 buttons
                     .map((button) => button.getAttribute('data-test')) // Extract data-test attributes
                     .filter((value): value is string => value !== null) // Remove null values
-            );
+            )
 
-            const isSlotDisplayed = allRadioButtonDataTest.includes(slotDateTime);
+            const isSlotDisplayed = allRadioButtonDataTest.includes(slotDateTime)
 
             // Custom assertion with an explicit check and error
             if (isSlotDisplayed) {
@@ -63,7 +69,7 @@ export default class SelectDateTimePage extends BasePage {
                 console.log(`Confirmed: SLOT_DATE_TIME value "${slotDateTime}" is not displayed on the page.`)
             }
         } else {
-            console.error('SLOT_DATE_TIME is not set in context!');
+            console.error('SLOT_DATE_TIME is not set in context!')
         }
     }
 
