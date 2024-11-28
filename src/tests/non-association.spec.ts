@@ -1,6 +1,6 @@
 import { test, expect } from '../fixtures/PageFixtures'
 import GlobalData from '../setup/GlobalData'
-import { deleteVisit, getAccessToken } from '../support/testingHelperClient'
+import { clearVisits, deleteVisit, getAccessToken } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
 
 test.beforeAll('Get access token and store so it is available as global data', async ({ request }, testInfo) => {
@@ -36,11 +36,17 @@ test.describe('Staff should not be able to book visits for non-assocaition priso
         await homePage.clickOnChangeEstablishment()
         await homePage.selectEstablishment('Bristol (HMP)')
         await homePage.clickOnSubmitButton()
+
         await homePage.clickOnManagePrisonVisits()
         await homePage.displayBookOrChangeaVisit()
         await homePage.checkOnPage('Manage prison visits - Manage prison visits')
         await homePage.selectBookOrChangeVisit()
 
+        // Switching the URL to 'staging' because selecting 'Change Establishment' sets the environment to 'Dev',
+        // and DSP does not have a 'Staging' environment.
+
+        await homePage.navigateTo('/')
+        await homePage.selectBookOrChangeVisit()
         await searchPage.checkOnPage('Manage prison visits - Search for a prisoner')
 
         await searchPage.enterPrisonerNumber('A6038DZ')
@@ -84,8 +90,12 @@ test.describe('Staff should not be able to book visits for non-assocaition priso
         expect(await bookingConfirmationPage.headerOnPage('Booking confirmed'))
         expect(await bookingConfirmationPage.displayBookingConfirmation()).toBeTruthy()
         const visitReference = await bookingConfirmationPage.getReferenceNumber()
+        const prisonerNum = await bookingConfirmationPage.getPrisonerNumber()
+
         GlobalData.set('visitReference', visitReference)
+        GlobalData.set('prisonerNum', prisonerNum)
         console.log('Confirmation message:', visitReference)
+        console.log('Prisoner number is:', prisonerNum)
 
         // Book a visit for a non-association prisoner - A6541DZ & A6038DZ are non-association prisoners
 
@@ -111,8 +121,12 @@ test.describe('Staff should not be able to book visits for non-assocaition priso
 })
 
 test.afterAll('Teardown test data', async ({ request }) => {
-    let visitRef = GlobalData.getAll('visitReference')
-    for (const visitId of visitRef) {
-        await deleteVisit({ request }, visitId)
+    const prisonerNumRefs = GlobalData.getAll('prisonerNum')
+    for (const priNum of prisonerNumRefs) {
+        try {
+            await clearVisits({ request }, priNum)
+        } catch (error) {
+            console.error(`Failed to clear visits for prisoner number: ${priNum}`, error)
+        }
     }
 })
