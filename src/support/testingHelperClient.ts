@@ -64,6 +64,17 @@ export const cancelVisit = async ({ request }: { request: APIRequestContext }, v
   return response.status()
 }
 
+
+export const clearVisits = async ({ request }: { request: APIRequestContext }, prisonerNumber: string) => {
+  const accessToken = globalData.get('authToken')
+  const response = await request.delete(`${testHelperUri}/test/prisoner/${prisonerNumber}/clear-visits`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+  return response.status()
+}
+
 export const updateModifyTimestamp = async (
   { request }: { request: APIRequestContext },
   applicationReference: string,
