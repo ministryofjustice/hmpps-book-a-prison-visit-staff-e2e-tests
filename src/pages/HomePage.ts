@@ -8,6 +8,7 @@ export default class HomePage extends BasePage {
     private readonly establishmentLink: Locator
     private readonly establishmentName: Locator 
     private readonly managePrisonLink : Locator
+    private readonly blockVistDates: Locator
 
     constructor(page: Page) {
         super(page)
@@ -16,6 +17,8 @@ export default class HomePage extends BasePage {
         this.establishmentLink = page.locator('[data-test="change-case-load-link"]')
         this.establishmentName = page.locator('#changeCaseloadSelect')
         this.managePrisonLink = page.getByRole('link',{name: 'Manage prison visits'})
+        this.blockVistDates = page.getByRole('link',{name: 'Block visit dates'})
+
     }
 
     async displayBookOrChangeaVisit(): Promise<void> {
@@ -41,5 +44,8 @@ export default class HomePage extends BasePage {
         await this.managePrisonLink.nth(0).click()
     }
 
+    async clickOnBlockVisitDates(): Promise<void> {
+        await this.blockVistDates.click()
+    }
+ 
 }
-
