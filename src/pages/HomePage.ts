@@ -9,6 +9,7 @@ export default class HomePage extends BasePage {
     private readonly establishmentName: Locator 
     private readonly managePrisonLink : Locator
     private readonly blockVistDates: Locator
+    private readonly needReviewLink: Locator
 
     constructor(page: Page) {
         super(page)
@@ -18,6 +19,7 @@ export default class HomePage extends BasePage {
         this.establishmentName = page.locator('#changeCaseloadSelect')
         this.managePrisonLink = page.getByRole('link',{name: 'Manage prison visits'})
         this.blockVistDates = page.getByRole('link',{name: 'Block visit dates'})
+        this.needReviewLink = page.locator('[href*="/review"]')
 
     }
 
@@ -46,6 +48,10 @@ export default class HomePage extends BasePage {
 
     async clickOnBlockVisitDates(): Promise<void> {
         await this.blockVistDates.click()
+    }
+
+    async clickNeedReview(): Promise<void> {
+        await this.needReviewLink.click()
     }
  
 }

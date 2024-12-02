@@ -29,7 +29,7 @@ export default class BlockVisitDatePage extends BasePage {
         await this.confirmYesRadio.check()
     }
 
-    async confrmationMessage(msg: string): Promise<void> {
+    async confirmationMessage(msg: string): Promise<void> {
         const text = this.blockedDateStatusMesssage
         expect(text).toHaveText(msg)
     }

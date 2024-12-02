@@ -85,8 +85,8 @@ test.describe('Staff should be able to view visits by date', () => {
 
         await homePage.clickOnVisitsByDate()
         await visitByDatesPage.headerOnPage('View visits by date')
-        await visitByDatesPage.clickOnDateLink()
-        await visitByDatesPage.hasBookedOnDateBtn()
+        await visitByDatesPage.clickDateListLink()
+        await visitByDatesPage.isBookedOnDateButtonVisible()
         const bookedDate = await visitByDatesPage.getBookedOnDate()
         const parsedDate = new Date()
         const bookingDate = parsedDate.toDateString()
