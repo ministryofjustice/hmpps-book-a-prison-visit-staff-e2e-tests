@@ -1,4 +1,3 @@
-import exp from 'constants'
 import { test, expect } from '../fixtures/PageFixtures'
 import GlobalData from '../setup/GlobalData'
 import { getAccessToken } from '../support/testingHelperClient'
@@ -23,7 +22,6 @@ test.describe('Staff should be able to review visits', () => {
         needReviewPage
 
     }) => {
-
         expect(await needReviewPage.checkOnPage('Manage prison visits - Visit bookings that need review')).toBeTruthy
         await needReviewPage.clickNeedReviewList()
         // Display reasons for review checklist 

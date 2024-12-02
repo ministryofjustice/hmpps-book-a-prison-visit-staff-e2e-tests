@@ -1,6 +1,6 @@
 import { test, expect } from '../fixtures/PageFixtures'
 import GlobalData from '../setup/GlobalData'
-import { clearVisits, deleteVisit, getAccessToken } from '../support/testingHelperClient'
+import { clearVisits,  getAccessToken } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
 
 test.beforeAll('Get access token and store so it is available as global data', async ({ request }, testInfo) => {
