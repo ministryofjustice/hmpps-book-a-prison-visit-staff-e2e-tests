@@ -1,7 +1,6 @@
-import exp from 'constants'
 import { test, expect } from '../fixtures/PageFixtures'
 import GlobalData from '../setup/GlobalData'
-import { deleteVisit, getAccessToken } from '../support/testingHelperClient'
+import { getAccessToken } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
 
 test.beforeAll('Get access token and store so it is available as global data', async ({ request }, testInfo) => {
@@ -20,39 +19,43 @@ test.describe('Staff should be able to block dates for social visits', () => {
 
     test('Block a vist date', async ({
         homePage,
-        blockVisitDatepage
+        blockVisitDatePage
     }) => {
-        test.slow()
+
+        // Navigate to the Block Visit Dates page
         await homePage.clickOnBlockVisitDates()
-        await blockVisitDatepage.checkOnPage('Manage prison visits - Block visit dates')
-        expect(await blockVisitDatepage.headerOnPage('Block visit dates')).toBeTruthy
-        await blockVisitDatepage.enterDateToBlock('25/11/2026')
-        await blockVisitDatepage.continueToNextPage()
-        expect(await blockVisitDatepage.headerOnPage('Are you sure you want to block visits on Wednesday 25 November 2026?')).toBeTruthy
-        await blockVisitDatepage.confirmBlockDate()
-        await blockVisitDatepage.continueToNextPage()
-        expect(await blockVisitDatepage.confrmationMessage('Visits are blocked for Wednesday 25 November 2026.')).toBeTruthy
-        await blockVisitDatepage.signOut()
+        await blockVisitDatePage.checkOnPage('Manage prison visits - Block visit dates')
+        expect(await blockVisitDatePage.headerOnPage('Block visit dates')).toBeTruthy
+
+        // Block a specific date
+        const blockDate = '25/11/2026'
+        await blockVisitDatePage.enterDateToBlock(blockDate)
+        await blockVisitDatePage.continueToNextPage()
+        expect(await blockVisitDatePage.headerOnPage(`Are you sure you want to block visits on Wednesday 25 November 2026?`)).toBeTruthy
+
+        // Confirm the block
+        await blockVisitDatePage.confirmBlockDate()
+        await blockVisitDatePage.continueToNextPage()
+        expect(await blockVisitDatePage.confirmationMessage(`Visits are blocked for Wednesday 25 November 2026.`)).toBeTruthy
+
+        await blockVisitDatePage.signOut()
 
     })
 
     test('Unblock a vist date', async ({
 
         homePage,
-        blockVisitDatepage
+        blockVisitDatePage
 
     }) => {
-        test.slow()
         await homePage.clickOnBlockVisitDates()
-        await blockVisitDatepage.checkOnPage('Manage prison visits - Block visit dates')
-        expect(await blockVisitDatepage.headerOnPage('Block visit dates')).toBeTruthy
-        await blockVisitDatepage.enterDateToBlock('25/11/2026')
-        await blockVisitDatepage.continueToNextPage()
-        expect(await blockVisitDatepage.errorMsg('The date entered is already blocked')).toBeTruthy
-        await blockVisitDatepage.unBlockDate()
-        expect(await blockVisitDatepage.confrmationMessage('Visits are unblocked for Wednesday 25 November 2026.')).toBeTruthy
-        await blockVisitDatepage.signOut()
-
+        await blockVisitDatePage.checkOnPage('Manage prison visits - Block visit dates')
+        expect(await blockVisitDatePage.headerOnPage('Block visit dates')).toBeTruthy
+        await blockVisitDatePage.enterDateToBlock('25/11/2026')
+        await blockVisitDatePage.continueToNextPage()
+        expect(await blockVisitDatePage.errorMsg('The date entered is already blocked')).toBeTruthy
+        await blockVisitDatePage.unBlockDate()
+        expect(await blockVisitDatePage.confirmationMessage('Visits are unblocked for Wednesday 25 November 2026.')).toBeTruthy
+        await blockVisitDatePage.signOut()
     })
 })
-
