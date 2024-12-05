@@ -36,7 +36,6 @@ type PageFixtures = {
     blockVisitDatePage: BlockVisitDatePage
     needReviewPage: NeedReviewPage
 
-
 }
 
 const test = baseTest.extend<PageFixtures>({
