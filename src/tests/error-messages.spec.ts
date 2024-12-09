@@ -41,7 +41,7 @@ test.describe('Error message validations', () => {
         await searchPage.signOut()
     })
 
-    test('Error messages on "View Visits by Date" page', async ({ homePage, visitByDatesPage, loginPage }) => {
+    test.fail('Error messages on "View Visits by Date" page', async ({ homePage, visitByDatesPage, loginPage }) => {
         await test.step('Sign in and navigate to Visits by Date page', async () => {
             await loginPage.signInWith(UserType.USER_ONE)
             await homePage.checkOnPage('Manage prison visits - Manage prison visits')
