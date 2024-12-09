@@ -27,6 +27,11 @@ class GlobalData {
   public remove(key: string): void {
     this._data = this._data.filter(item => item.key !== key)
   }
+
+  public clear(): void {
+    this._data = [];
+  }
+
 }
 
 export default GlobalData.getInstance()

@@ -11,7 +11,6 @@ export default class SelectDateTimePage extends BasePage {
         super(page)
         this.availableSlot = page.locator('input[type="radio"]')
         this.showAllSlots = page.getByRole('button', { name: 'Show all sections' })
-        // this.displayedSlot = page.locator('input[name="visit-date-and-time"]')
         this.displayedSlot = page.locator('label')
 
         this.contextStorage = new Map()

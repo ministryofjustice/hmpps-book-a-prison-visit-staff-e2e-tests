@@ -144,4 +144,8 @@ test.describe('Staff should be able to book a slots for various categories', () 
             }
         }
     })
+
+     // Clear global data cache
+     GlobalData.clear()
+     console.log('Global data cache cleared.')
 })
