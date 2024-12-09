@@ -83,7 +83,18 @@ test.describe('Error message validations', () => {
         await visitTypePage.signOut()
     })
 
-    test('Main Contact page error and booking flow', async ({ homePage, loginPage, searchPage, prisonerDetailsPage, selectorVisitorPage, selectDateTimePage, additionalSupportPage, mainContactPage, bookingMethodPage, checkYourBookingPage, bookingConfirmationPage }) => {
+    test('Main Contact page error and booking flow', async ({
+        homePage,
+        loginPage,
+        searchPage,
+        prisonerDetailsPage,
+        selectorVisitorPage,
+        selectDateTimePage,
+        additionalSupportPage,
+        mainContactPage,
+        bookingMethodPage,
+        checkYourBookingPage,
+        bookingConfirmationPage }) => {
         test.slow()
 
         await test.step('Sign in and navigate to booking flow', async () => {
