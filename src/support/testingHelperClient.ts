@@ -145,3 +145,85 @@ export const createVisit = async ({ request }: { request: APIRequestContext }, a
   }
   return res
 }
+
+
+export const createSessionTemplate = async (
+  { request }: { request: APIRequestContext },
+  sessionStartDateTime: Date,
+  prisonCode: string,
+  weeklyFrequency: number,
+  closedCapacity: number,
+  openCapacity: number,
+  locationLevels: string | null,
+  incentive: string | null,
+  category: string | null,
+  disableAllOtherSessionsForSlotAndPrison: boolean
+): Promise<number> => {
+  try {
+    // Retrieve access token
+    const accessToken = globalData.get('authToken')
+    if (!accessToken) {
+      throw new Error('Access token not found')
+    }
+
+    // Prepare the request payload
+    const payload = {
+      prisonCode,
+      sessionStartDateTime: sessionStartDateTime.toISOString(), // Format Date for API
+      weeklyFrequency,
+      closedCapacity,
+      openCapacity,
+      locationLevels,
+      incentive,
+      category,
+      disableAllOtherSessionsForSlotAndPrison,
+    }
+
+    // Send the PUT request
+    const response = await request.put(
+      `${testHelperUri}/test/prison/${prisonCode}/template/add`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json', // Ensure correct content type
+        },
+        data: payload, // Pass the payload
+      }
+    )
+
+    // Handle response
+    if (!response.ok()) {
+      const errorMessage = await response.text()
+      throw new Error(
+        `Failed to create session template: ${response.status()} - ${errorMessage}`
+      )
+    }
+
+    return response.status()
+
+  } catch (error) {
+    console.error('Error in createSessionTemplate:', error)
+    throw error;
+  }
+}
+
+export const getSlotDataTestValue = (localDate: Date, startSlot: number, endSlot: number): string => {
+  // Define the start and end times
+  const startTime = new Date()
+  startTime.setHours(startSlot, 0, 0, 0)
+
+  const endTime = new Date()
+  endTime.setHours(endSlot, 0, 0, 0)
+
+  // Define the formatter for "ha" format
+  const formatTime = (date: Date): string => {
+    const hours = date.getHours()
+    const minutes = date.getMinutes()
+    const ampm = hours >= 12 ? 'pm' : 'am'
+    const formattedHours = hours % 12 || 12; // Convert to 12-hour format
+    return `${formattedHours}${ampm}`
+  }
+
+  // Format the result
+  return `${localDate.toISOString().split('T')[0]} - ${formatTime(startTime)} to ${formatTime(endTime)}`
+}

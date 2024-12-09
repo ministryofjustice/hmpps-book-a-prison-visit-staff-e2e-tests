@@ -6,10 +6,13 @@ export default class SelectDateTimePage extends BasePage {
     private readonly contextStorage: Map<string, string>; // A simple map to store context data
     private readonly availableSlot: Locator
     private readonly showAllSlots: Locator
+    private readonly displayedSlot: Locator
     constructor(page: Page) {
         super(page)
         this.availableSlot = page.locator('input[type="radio"]')
         this.showAllSlots = page.getByRole('button', { name: 'Show all sections' })
+        this.displayedSlot = page.locator('label')
+
         this.contextStorage = new Map()
     }
 
@@ -78,5 +81,11 @@ export default class SelectDateTimePage extends BasePage {
         const firstAvailableSlot = this.availableSlot.first()
         await firstAvailableSlot.check()
         expect(await firstAvailableSlot.isChecked()).toBeTruthy()
+    }
+
+    async getDisplayedSlots(): Promise<string> {
+        await this.showAllSlots.first().click()
+        const textContent = await this.displayedSlot.allTextContents()
+        return textContent.length > 0 ? textContent[0].trim() : ''
     }
 }
