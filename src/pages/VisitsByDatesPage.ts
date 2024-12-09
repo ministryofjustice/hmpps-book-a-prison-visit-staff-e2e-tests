@@ -2,13 +2,13 @@ import { BasePage } from "./BasePage"
 import { Locator, Page } from "@playwright/test"
 
 export default class VisitsByDatesPage extends BasePage {
-    private readonly viewAnotherDateButton: Locator
+    private readonly viewAnotherDateButton: Locator;
     private readonly viewButton: Locator
     private readonly dateErrorLink: Locator
     private readonly dateListLink: Locator
     private readonly bookedOnDateButton: Locator
-    private readonly prisonerName: Locator
     private readonly bookedOnDate: Locator
+    private readonly prisonerName: Locator
     private readonly prisonerNumber: Locator
 
     constructor(page: Page) {
@@ -32,7 +32,7 @@ export default class VisitsByDatesPage extends BasePage {
     }
 
     async getInvalidDateErrorMessage(): Promise<string> {
-        return await this.dateErrorLink.innerText()
+        return this.dateErrorLink.innerText()
     }
 
     async clickDateListLink(): Promise<void> {
@@ -40,18 +40,18 @@ export default class VisitsByDatesPage extends BasePage {
     }
 
     async isBookedOnDateButtonVisible(): Promise<boolean> {
-        return await this.bookedOnDateButton.isVisible()
+        return this.bookedOnDateButton.isVisible()
     }
 
     async getBookedOnDate(): Promise<string> {
-        return await this.bookedOnDate.innerText()
+        return this.bookedOnDate.innerText()
     }
 
     async getPrisonerName(): Promise<string> {
-        return await this.prisonerName.innerText()
+        return this.prisonerName.innerText()
     }
 
     async getPrisonerNumber(): Promise<string> {
-        return await this.prisonerNumber.innerText()
+        return this.prisonerNumber.innerText()
     }
 }

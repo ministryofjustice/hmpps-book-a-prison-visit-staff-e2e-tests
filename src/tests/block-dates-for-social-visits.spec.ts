@@ -44,21 +44,21 @@ test.describe('Staff should be able to block dates for social visits', () => {
     test('Unblock a visit date', async ({ homePage, blockVisitDatePage }) => {
         const blockedDate = '25/11/2026';
         // const confirmationMessage = `Visits are unblocked for Wednesday ${blockedDate}.`
-    
+
         // Navigate to Block Visit Dates page
         await homePage.clickOnBlockVisitDates()
         await blockVisitDatePage.checkOnPage('Manage prison visits - Block visit dates')
         expect(await blockVisitDatePage.headerOnPage('Block visit dates')).toBeTruthy
-    
+
         // Block the date and verify error message
         await blockVisitDatePage.enterDateToBlock(blockedDate)
         await blockVisitDatePage.continueToNextPage();
         expect(await blockVisitDatePage.errorMsg('The date entered is already blocked')).toBeTruthy
-    
+
         // Unblock the date and verify confirmation message
         await blockVisitDatePage.unBlockDate()
         expect(await blockVisitDatePage.confirmationMessage('Visits are unblocked for Wednesday 25 November 2026.')).toBeTruthy
-    
+
         // Sign out
         await blockVisitDatePage.signOut();
     })

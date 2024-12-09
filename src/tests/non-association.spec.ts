@@ -1,6 +1,6 @@
 import { test, expect } from '../fixtures/PageFixtures'
 import GlobalData from '../setup/GlobalData'
-import { clearVisits,  getAccessToken } from '../support/testingHelperClient'
+import { clearVisits, getAccessToken } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
 
 test.beforeAll('Get access token and store so it is available as global data', async ({ request }, testInfo) => {
@@ -118,15 +118,18 @@ test.describe('Staff should not be able to book visits for non-assocaition priso
         await selectDateTimePage.signOut()
 
     })
-})
 
-test.afterAll('Teardown test data', async ({ request }) => {
-    const prisonerNumRefs = GlobalData.getAll('prisonerNum')
-    for (const priNum of prisonerNumRefs) {
-        try {
-            await clearVisits({ request }, priNum)
-        } catch (error) {
-            console.error(`Failed to clear visits for prisoner number: ${priNum}`, error)
+    test.afterAll('Teardown test data', async ({ request }) => {
+        const prisonerNumRefs = GlobalData.getAll('prisonerNum')
+        for (const priNum of prisonerNumRefs) {
+            try {
+                await clearVisits({ request }, priNum)
+            } catch (error) {
+                console.error(`Failed to clear visits for prisoner number: ${priNum}`, error)
+            }
         }
-    }
+        // Clear global data cache
+        GlobalData.clear()
+        console.log('Global data cache cleared.')
+    })
 })

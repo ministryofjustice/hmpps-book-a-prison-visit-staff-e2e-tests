@@ -98,15 +98,17 @@ test.describe('Staff should be able to view visits by date', () => {
         expect(prisonerNumber).toContain('A6036DZ')
 
         console.log('Confirmation message:', visitReference)
-        console.log("bookeddate:", bookedDate, "Parsed date:",parsedDate, "formattedDate:", formattedDate)
+        console.log("bookeddate:", bookedDate, "Parsed date:", parsedDate, "formattedDate:", formattedDate)
 
     })
 
-})
-
-test.afterAll('Teardown test data', async ({ request }) => {
-    let visitRef = GlobalData.getAll('visitReference')
-    for (const visitId of visitRef) {
-        await deleteVisit({ request }, visitId)
-    }
+    test.afterAll('Teardown test data', async ({ request }) => {
+        let visitRef = GlobalData.getAll('visitReference')
+        for (const visitId of visitRef) {
+            await deleteVisit({ request }, visitId)
+        }
+        // Clear global data cache
+        GlobalData.clear()
+        console.log('Global data cache cleared.')
+    })
 })
