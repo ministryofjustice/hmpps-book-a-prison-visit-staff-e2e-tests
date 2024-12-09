@@ -102,8 +102,6 @@ test.describe('Staff should be able to view visits by date', () => {
 
     })
 
-
-
     test.afterAll('Teardown test data', async ({ request }) => {
         let visitRef = GlobalData.getAll('visitReference')
         for (const visitId of visitRef) {

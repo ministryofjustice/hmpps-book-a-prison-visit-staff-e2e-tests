@@ -149,8 +149,6 @@ test.describe('Display error messages', () => {
 
     })
 
-
-
     test.afterAll('Teardown test data', async ({ request }) => {
         let visitRef = GlobalData.getAll('visitReference')
         for (const visitId of visitRef) {

@@ -119,7 +119,6 @@ test.describe('Staff should not be able to book visits for non-assocaition priso
 
     })
 
-
     test.afterAll('Teardown test data', async ({ request }) => {
         const prisonerNumRefs = GlobalData.getAll('prisonerNum')
         for (const priNum of prisonerNumRefs) {

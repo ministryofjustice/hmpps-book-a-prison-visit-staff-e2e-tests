@@ -29,7 +29,7 @@ class GlobalData {
   }
 
   public clear(): void {
-    this._data = [];
+    this._data = []
   }
 
 }
