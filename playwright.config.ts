@@ -12,7 +12,7 @@ export default defineConfig({
   fullyParallel:  process.env.CI ? true : false, // Enable parallel only on CI
   forbidOnly: !!process.env.CI, // Forbid .only in CI
   retries: process.env.CI ? 1 : 0, // Retry failed tests once in CI
-  workers:  process.env.CI ? 4 : 1, // 4 workers on CI, 1 worker locally
+  workers:  process.env.CI ? 1 : 1, // 4 workers on CI, 1 worker locally
 
   reporter: process.env.CI
     ? [
