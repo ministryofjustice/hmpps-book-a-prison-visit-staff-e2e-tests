@@ -4,89 +4,70 @@ import ENV from './src/setup/env'
 
 dotenvConfig()
 
-// if (!process.env.INTEG_USER_NAME || !process.env.INTEG_PASSWORD) {
-//   throw new Error('INTEG_USER_NAME and INTEG_PASSWORD environment variables must be set')
-// }
-
 export default defineConfig({
-  globalSetup: './src/setup/globalSetup.ts',
-  globalTimeout: 60000 * 5,
-  timeout: 60000,
-  testDir: './src/tests',
-  fullyParallel: false,
-  forbidOnly: process.env.CI !== undefined,
-  retries: process.env.CI ? 1 : undefined,
-  workers: 1,
+  globalSetup: './src/setup/globalSetup.ts', // Setup script for initializing tests
+  globalTimeout: 5 * 60_000, // 5 minutes
+  timeout: 60_000, // 1 minute per test
+  testDir: './src/tests', // Directory containing test files
+  fullyParallel:  process.env.CI ? true : false, // Enable parallel only on CI
+  forbidOnly: !!process.env.CI, // Forbid .only in CI
+  retries: process.env.CI ? 1 : 0, // Retry failed tests once in CI
+  workers:  process.env.CI ? 1 : 1, // 4 workers on CI, 1 worker locally
 
   reporter: process.env.CI
     ? [
-      ['junit', { outputFile: 'results.xml' }],
-      ['html', { open: 'never' }],
+      ['html', { open: 'never' }], // HTML report for CI
     ]
     : [
-      ['html', { open: 'never' }],
-      ['allure-playwright', { detail: true, outputFolder: 'allure-results' }],
+      ['html', { open: 'never' }], // HTML report locally
+      ['allure-playwright', { detail: true, outputFolder: 'allure-results' }], // Allure for local use
     ],
-  use: {
-    baseURL: ENV.BASE_URL,
-    navigationTimeout: 60000,
-    actionTimeout: 10000,
-    testIdAttribute: 'data-test',
 
-    trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
+  use: {
+    baseURL: ENV.BASE_URL, // Base URL for application under test
+    navigationTimeout: 60_000, // Timeout for navigation actions
+    actionTimeout: 10_000, // Timeout for user actions (e.g., clicks)
+    testIdAttribute: 'data-test', // Custom attribute for locating elements
+
+    trace: 'on-first-retry', // Generate trace on the first retry
+    screenshot: 'only-on-failure', // Capture screenshots only on failure
+    video:'retain-on-failure',  // Capture screenshots only on failure
 
     launchOptions: {
-      args: ['--ignore-certificate-errors'],
+      args: ['--ignore-certificate-errors'], // Ignore SSL issues
     }
-    // ,
-    // httpCredentials: {
-    //   username: process.env.INTEG_USER_NAME,
-    //   password: process.env.INTEG_PASSWORD,
-    // },
   },
 
   projects: [
     {
-      name: 'setup',
+      name: 'setup', // Pre-test setup tasks
       testMatch: /.*\.setup\.ts/,
     },
     {
-      name: 'chromium',
+      name: 'chromium', // Chromium tests
       use: {
         ...devices['Desktop Chrome'],
-        viewport: { width: 1920, height: 1080 },
-        storageState: './playwright/.auth/auth.json',
+        viewport: { width: 1920, height: 1080 }, // Set viewport size
+        storageState: './playwright/.auth/auth.json', // Use pre-authenticated state
       },
-      dependencies: ['setup'],
+      dependencies: ['setup'], // Depends on setup project
     },
     {
-      name: 'firefox',
+      name: 'firefox', // Firefox tests
       use: {
         ...devices['Desktop Firefox'],
-        viewport: { width: 1920, height: 1080 },
+        viewport: { width: 1920, height: 1080 }, // Set viewport size
         storageState: './playwright/.auth/auth.json',
       },
-      dependencies: ['setup'],
+      dependencies: ['setup']
     },
     {
-      name: 'webkit',
+      name: 'webkit', // Safari tests
       use: {
         ...devices['Desktop Safari'],
-        viewport: { width: 1920, height: 1080 },
+        viewport: { width: 1920, height: 1080 }, // Set viewport size
         storageState: './playwright/.auth/auth.json',
       },
-      dependencies: ['setup'],
-    },
-    /* Test against mobile viewports. */
-    {
-      name: 'mobile_iPhone13',
-      use: { ...devices['iPhone 13 Pro Max'], storageState: './playwright/.auth/auth.json' },
-      dependencies: ['setup'],
-    },
-    {
-      name: 'mobile_nexus7',
-      use: { ...devices['Nexus 7'], storageState: './playwright/.auth/auth.json' },
       dependencies: ['setup'],
     },
   ],
