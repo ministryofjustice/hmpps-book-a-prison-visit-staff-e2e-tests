@@ -75,7 +75,7 @@ test.describe('Display error messages', () => {
         expect(visitTypeErrorMsg).toContain('No visit type selected')
         await visitTypePage.signOut()
     })
-   
+
     test('Verify error messages on main contact page and then complete a booking ', async ({
         homePage,
         loginPage,
@@ -147,14 +147,17 @@ test.describe('Display error messages', () => {
         GlobalData.set('visitReference', visitReference)
         console.log('Confirmation message:', visitReference)
 
-    })  
+    })
 
+
+
+    test.afterAll('Teardown test data', async ({ request }) => {
+        let visitRef = GlobalData.getAll('visitReference')
+        for (const visitId of visitRef) {
+            await deleteVisit({ request }, visitId)
+        }
+        // Clear global data cache
+        GlobalData.clear()
+        console.log('Global data cache cleared.')
+    })
 })
-
-test.afterAll('Teardown test data', async ({ request }) => {
-    let visitRef = GlobalData.getAll('visitReference')
-    for (const visitId of visitRef) {
-        await deleteVisit({ request }, visitId)
-    }
-})
-

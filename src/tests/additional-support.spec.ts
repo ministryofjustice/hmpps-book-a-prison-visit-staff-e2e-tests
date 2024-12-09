@@ -86,12 +86,15 @@ test.describe('Staff should be able to book a visit for visitors that need addit
         console.log('Confirmation message:', visitReference)
 
     })
-})
 
-test.afterAll('Teardown test data', async ({ request }) => {
-    let visitRef = GlobalData.getAll('visitReference')
-    for (const visitId of visitRef) {
-        await deleteVisit({ request }, visitId)
-    }
-})
 
+    test.afterAll('Teardown test data', async ({ request }) => {
+        let visitRef = GlobalData.getAll('visitReference')
+        for (const visitId of visitRef) {
+            await deleteVisit({ request }, visitId)
+        }
+    })
+    // Clear global data cache
+    GlobalData.clear()
+    console.log('Global data cache cleared.')
+})
