@@ -40,6 +40,16 @@ export const deleteVisit = async ({ request }: { request: APIRequestContext }, v
   return response.status()
 }
 
+export const deleteTemplate = async ({ request }: { request: APIRequestContext }, visitReference: string) => {
+  const accessToken = globalData.get('authToken')
+  const response = await request.put(`${testHelperUri}/test/template/${visitReference}/delete`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+  return response.status()
+}
+
 export const updateVisitStatus = async (
   { request }: { request: APIRequestContext },
   visitReference: string,
@@ -157,7 +167,8 @@ export const createSessionTemplate = async (
   locationLevels: string | null,
   incentive: string | null,
   category: string | null,
-  disableAllOtherSessionsForSlotAndPrison: boolean
+  disableAllOtherSessionsForSlotAndPrison: boolean,
+  sessionName: string
 ): Promise<number> => {
   try {
     // Retrieve access token
@@ -177,6 +188,7 @@ export const createSessionTemplate = async (
       incentive,
       category,
       disableAllOtherSessionsForSlotAndPrison,
+      sessionName
     }
 
     // Send the PUT request
