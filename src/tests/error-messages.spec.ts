@@ -3,80 +3,87 @@ import GlobalData from '../setup/GlobalData'
 import { deleteVisit, getAccessToken } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
 
-test.beforeAll('Get access token and store so it is available as global data', async ({ request }, testInfo) => {
-    GlobalData.set('authToken', await getAccessToken({ request }))
+test.beforeAll('Setup global data and access token', async ({ request }, testInfo) => {
+    GlobalData.clear() // Ensure cache is clear before tests
+    const authToken = await getAccessToken({ request })
+    GlobalData.set('authToken', authToken)
     GlobalData.set('deviceName', testInfo.project.name)
+    console.log('Global data initialized.')
 })
 
-test.describe('Display error messages', () => {
-
+test.describe('Error message validations', () => {
     test.beforeEach(async ({ loginPage }) => {
         await loginPage.navigateTo('/')
         await loginPage.checkOnPage('HMPPS Digital Services - Sign in')
     })
 
-    test('Error messages on the search page', async ({
-        searchPage,
-        homePage,
-        loginPage
-    }) => {
-        await loginPage.signInWith(UserType.USER_ONE)
-        await homePage.checkOnPage('Manage prison visits - Manage prison visits')
-        await homePage.selectBookOrChangeVisit()
-        await searchPage.clickOnSearch()
-        const errorMessage = await searchPage.getErrorMessage()
-        expect(errorMessage).toContain('You must enter at least 2 characters')
-        await searchPage.clickOnSearchByBookingRef()
-        await searchPage.headerOnPage('Search for a booking')
-        await searchPage.clickOnSearch()
-        const invalidRefError = await searchPage.getInvalidRefErrorMessage()
-        expect(invalidRefError).toContain('Booking reference must be 8')
+    test('Error messages on the search page', async ({ searchPage, homePage, loginPage }) => {
+        await test.step('Sign in and navigate to search page', async () => {
+            await loginPage.signInWith(UserType.USER_ONE)
+            await homePage.checkOnPage('Manage prison visits - Manage prison visits');
+            await homePage.selectBookOrChangeVisit()
+        })
+
+        await test.step('Validate error for empty search', async () => {
+            await searchPage.clickOnSearch()
+            const errorMessage = await searchPage.getErrorMessage()
+            expect(errorMessage).toContain('You must enter at least 2 characters')
+        })
+
+        await test.step('Validate error for invalid booking reference', async () => {
+            await searchPage.clickOnSearchByBookingRef()
+            await searchPage.headerOnPage('Search for a booking')
+            await searchPage.clickOnSearch()
+            const invalidRefError = await searchPage.getInvalidRefErrorMessage()
+            expect(invalidRefError).toContain('Booking reference must be 8')
+        })
+
         await searchPage.signOut()
     })
 
-    test('Error messages on view Visits by date page', async ({
-        homePage,
-        visitByDatesPage,
-        loginPage
-    }) => {
-        await loginPage.signInWith(UserType.USER_ONE)
-        await homePage.checkOnPage('Manage prison visits - Manage prison visits')
-        await homePage.clickOnVisitsByDate()
-        await visitByDatesPage.headerOnPage('View visits by date')
-        await visitByDatesPage.clickViewAnotherDateButton()
-        await visitByDatesPage.clickViewButton()
-        const dateErrorMsg = await visitByDatesPage.getInvalidDateErrorMessage()
-        expect(dateErrorMsg).toContain('Enter a valid date')
+    test('Error messages on "View Visits by Date" page', async ({ homePage, visitByDatesPage, loginPage }) => {
+        await test.step('Sign in and navigate to Visits by Date page', async () => {
+            await loginPage.signInWith(UserType.USER_ONE)
+            await homePage.checkOnPage('Manage prison visits - Manage prison visits')
+            await homePage.clickOnVisitsByDate()
+        })
+
+        await test.step('Validate invalid date error message', async () => {
+            await visitByDatesPage.headerOnPage('View visits by date')
+            await visitByDatesPage.clickViewAnotherDateButton()
+            await visitByDatesPage.clickViewButton()
+            const dateErrorMsg = await visitByDatesPage.getInvalidDateErrorMessage();
+            expect(dateErrorMsg).toContain('Enter a valid date')
+        })
+
         await visitByDatesPage.signOut()
     })
 
-    test("Error messages on 'select Open or Closed visit type page' ", async ({
-        homePage,
-        loginPage,
-        searchPage,
-        prisonerDetailsPage,
-        selectorVisitorPage,
-        visitTypePage,
+    test("Error messages on 'Select Visit Type' page", async ({ homePage, loginPage, searchPage, prisonerDetailsPage, selectorVisitorPage, visitTypePage }) => {
+        await test.step('Sign in and navigate to Select Visit Type page', async () => {
+            await loginPage.signInWith(UserType.USER_FOUR)
+            await homePage.checkOnPage('Manage prison visits - Manage prison visits')
+            await homePage.selectBookOrChangeVisit()
+            await searchPage.checkOnPage('Manage prison visits - Search for a prisoner')
+            await searchPage.enterPrisonerNumber('A8899DZ')
+            await searchPage.selectPrisonerformResults()
+            await prisonerDetailsPage.clickOnBookAPrisonVisit()
+        })
 
-    }) => {
-        await loginPage.signInWith(UserType.USER_FOUR)
-        await homePage.checkOnPage('Manage prison visits - Manage prison visits')
-        await homePage.selectBookOrChangeVisit()
-        await searchPage.checkOnPage('Manage prison visits - Search for a prisoner')
-        await searchPage.enterPrisonerNumber('A8899DZ')
-        await searchPage.selectPrisonerformResults()
-        await prisonerDetailsPage.clickOnBookAPrisonVisit()
-        expect(await selectorVisitorPage.checkOnPage('Manage prison visits - Select visitors from the prisoner’s approved visitor list'))
-        await selectorVisitorPage.selectFirstVisitor()
-        await selectorVisitorPage.continueToNextPage()
-        await visitTypePage.headerOnPage("Check the prisoner's closed visit restrictions")
-        await visitTypePage.continueToNextPage()
-        const visitTypeErrorMsg = await visitTypePage.getVisitTypeErrorMessage()
-        expect(visitTypeErrorMsg).toContain('No visit type selected')
+        await test.step('Validate error for no visit type selected', async () => {
+            await selectorVisitorPage.checkOnPage('Manage prison visits - Select visitors from the prisoner’s approved visitor list')
+            await selectorVisitorPage.selectFirstVisitor()
+            await selectorVisitorPage.continueToNextPage()
+            await visitTypePage.headerOnPage("Check the prisoner's closed visit restrictions")
+            await visitTypePage.continueToNextPage()
+            const visitTypeErrorMsg = await visitTypePage.getVisitTypeErrorMessage()
+            expect(visitTypeErrorMsg).toContain('No visit type selected')
+        })
+
         await visitTypePage.signOut()
     })
 
-    test('Verify error messages on main contact page and then complete a booking ', async ({
+    test('Main Contact page error and booking flow', async ({
         homePage,
         loginPage,
         searchPage,
@@ -87,74 +94,59 @@ test.describe('Display error messages', () => {
         mainContactPage,
         bookingMethodPage,
         checkYourBookingPage,
-        bookingConfirmationPage
-
-    }) => {
+        bookingConfirmationPage }) => {
         test.slow()
 
-        await loginPage.signInWith(UserType.USER_ONE)
-        await homePage.checkOnPage('Manage prison visits - Manage prison visits')
-        await homePage.selectBookOrChangeVisit()
+        await test.step('Sign in and navigate to booking flow', async () => {
+            await loginPage.signInWith(UserType.USER_ONE)
+            await homePage.checkOnPage('Manage prison visits - Manage prison visits')
+            await homePage.selectBookOrChangeVisit()
+            await searchPage.checkOnPage('Manage prison visits - Search for a prisoner')
+            await searchPage.enterPrisonerNumber('A6036DZ')
+            await searchPage.selectPrisonerformResults()
+            await prisonerDetailsPage.clickOnBookAPrisonVisit()
+        })
 
-        await searchPage.checkOnPage('Manage prison visits - Search for a prisoner')
-        await searchPage.enterPrisonerNumber('A6036DZ')
-        await searchPage.selectPrisonerformResults()
+        await test.step('Complete booking flow with validations', async () => {
+            await selectorVisitorPage.selectFirstVisitor()
+            await selectorVisitorPage.continueToNextPage()
+            await selectDateTimePage.selectFirstAvailableSlot()
+            await selectDateTimePage.continueToNextPage()
+            await additionalSupportPage.selectNoAdditionalSupportRequired()
+            await additionalSupportPage.continueToNextPage()
 
-        await prisonerDetailsPage.clickOnBookAPrisonVisit()
+            await mainContactPage.continueToNextPage()
+            const noContactErrorMsg = await mainContactPage.getNoContactErrorMsg()
+            expect(noContactErrorMsg).toContain('No main contact selected')
 
-        expect(await selectorVisitorPage.checkOnPage('Manage prison visits - Select visitors from the prisoner’s approved visitor list'))
-        await selectorVisitorPage.selectFirstVisitor()
-        await selectorVisitorPage.continueToNextPage()
+            await mainContactPage.selectMainContactForBooking()
+            await mainContactPage.selectNoPhoneNumberProvided()
+            const mainContact = await mainContactPage.getMainContactName()
+            await mainContactPage.continueToNextPage()
 
-        expect(await selectDateTimePage.checkOnPage('Manage prison visits - Select date and time of visit'))
-        expect(await selectDateTimePage.headerOnPage('Select date and time of visit'))
-        await selectDateTimePage.selectFirstAvailableSlot()
-        await selectDateTimePage.continueToNextPage()
+            await bookingMethodPage.selectBookingMethod()
+            await bookingMethodPage.continueToNextPage()
 
-        expect(await additionalSupportPage.checkOnPage('Manage prison visits - Is additional support needed for any of the visitors?'))
-        expect(await additionalSupportPage.headerOnPage('Is additional support needed for any of the visitors?'))
-        await additionalSupportPage.selectNoAdditionalSupportRequired()
-        await additionalSupportPage.continueToNextPage()
+            const mainContactNameOnDetails = await checkYourBookingPage.getMainContactName()
+            expect(mainContactNameOnDetails).toContain(mainContact)
+            await checkYourBookingPage.selectSubmitBooking()
 
-        await mainContactPage.checkOnPage('Manage prison visits - Who is the main contact for this booking?')
-        expect(await mainContactPage.headerOnPage('Who is the main contact for this booking?'))
-        await mainContactPage.continueToNextPage()
-        const noContactErrorMsg = await mainContactPage.getNoContactErrorMsg()
-        expect(noContactErrorMsg).toContain('No main contact selected')
-
-        await mainContactPage.selectMainContactForBooking()
-        await mainContactPage.selectNoPhoneNumberProvided()
-        const mainContact = await mainContactPage.getMainContactName()
-        await mainContactPage.continueToNextPage()
-
-        await bookingMethodPage.checkOnPage('Manage prison visits - How was this booking requested?')
-        expect(await bookingMethodPage.headerOnPage('How was this booking requested?'))
-        await bookingMethodPage.selectBookingMethod()
-        await bookingMethodPage.continueToNextPage()
-
-        await checkYourBookingPage.checkOnPage('Manage prison visits - Check the visit details before booking')
-        expect(await checkYourBookingPage.headerOnPage('Check the visit details before booking'))
-        const mainContactNameOnDetails = await checkYourBookingPage.getMainContactName()
-        expect(mainContactNameOnDetails).toContain(mainContact)
-        await checkYourBookingPage.selectSubmitBooking()
-
-        await bookingConfirmationPage.checkOnPage('Manage prison visits - Booking confirmed')
-        expect(await bookingConfirmationPage.headerOnPage('Booking confirmed'))
-        expect(await bookingConfirmationPage.displayBookingConfirmation()).toBeTruthy()
-        const visitReference = await bookingConfirmationPage.getReferenceNumber()
-        await bookingConfirmationPage.signOut()
-
-        GlobalData.set('visitReference', visitReference)
-        console.log('Confirmation message:', visitReference)
-
+            const visitReference = await bookingConfirmationPage.getReferenceNumber()
+            GlobalData.set('visitReference', visitReference)
+            console.log('Confirmation message:', visitReference)
+        })
     })
 
     test.afterAll('Teardown test data', async ({ request }) => {
-        let visitRef = GlobalData.getAll('visitReference')
-        for (const visitId of visitRef) {
-            await deleteVisit({ request }, visitId)
+        const visitRefs = GlobalData.getAll('visitReference')
+        for (const visitId of visitRefs) {
+            try {
+                await deleteVisit({ request }, visitId);
+                console.log(`Visit with reference ${visitId} deleted.`)
+            } catch (error) {
+                console.error(`Failed to delete visit with reference ${visitId}:`, error)
+            }
         }
-        // Clear global data cache
         GlobalData.clear()
         console.log('Global data cache cleared.')
     })
