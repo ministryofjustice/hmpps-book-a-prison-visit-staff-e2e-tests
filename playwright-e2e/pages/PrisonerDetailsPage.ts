@@ -7,6 +7,7 @@ export default class PrisonerDetailsPage extends BasePage {
     private readonly cancelVisitButton: Locator
     private readonly prisonerCategory: Locator
     private readonly prisonerIncentive: Locator
+    private readonly prisonerLocation: Locator
 
 
     constructor(page: Page) {
@@ -16,6 +17,8 @@ export default class PrisonerDetailsPage extends BasePage {
         this.visitRefNumber = page.locator('[class$=govuk-link--no-visited-state]')
         this.prisonerCategory = page.locator('[data-test^=category]')
         this.prisonerIncentive = page.locator('[data-test^=iep-level]')
+        this.prisonerLocation = page.locator('[data-test^=location]')
+
     }
 
     async clickOnBookAPrisonVisit(): Promise<void> {
@@ -31,6 +34,10 @@ export default class PrisonerDetailsPage extends BasePage {
 
     async getPrisonerIncentive(): Promise<string> {
         return await this.prisonerIncentive.innerText()
+    }
+
+    async getPrisonerLocation(): Promise<string> {
+        return await this.prisonerLocation.innerText()
     }
 
 }

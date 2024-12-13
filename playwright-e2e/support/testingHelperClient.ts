@@ -189,6 +189,7 @@ export const createSessionTemplate = async (
       category,
       disableAllOtherSessionsForSlotAndPrison,
       sessionName
+      
     }
 
     // Send the PUT request

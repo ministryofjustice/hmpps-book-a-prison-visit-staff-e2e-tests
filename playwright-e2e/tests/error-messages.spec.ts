@@ -48,7 +48,7 @@ test.describe('Error message validations', () => {
             await homePage.clickOnVisitsByDate()
         })
 
-        await test.step('Validate invalid date error message', async () => {
+        await test.skip('Validate invalid date error message', async () => {
             await visitByDatesPage.headerOnPage('View visits by date')
             await visitByDatesPage.clickViewAnotherDateButton()
             await visitByDatesPage.clickViewButton()

@@ -15,3 +15,4 @@ export default class SelectVisitorPage extends BasePage {
         expect(await firstCheckbox.isChecked()).toBeTruthy()
     }
 }
+

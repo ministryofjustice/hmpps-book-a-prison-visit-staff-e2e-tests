@@ -8,7 +8,7 @@ test.beforeAll('Get access token and store so it is available as global data', a
     GlobalData.set('deviceName', testInfo.project.name)
 })
 
-test.describe('Staff should be able to book a slots for various categories', () => {
+test.describe('Staff should be able to book slots for various categories', () => {
 
     test.beforeEach(async ({ loginPage, homePage }) => {
         // Common steps for all tests
