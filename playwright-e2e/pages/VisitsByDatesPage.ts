@@ -24,10 +24,12 @@ export default class VisitsByDatesPage extends BasePage {
     }
 
     async clickViewAnotherDateButton(): Promise<void> {
+        await this.viewAnotherDateButton.waitFor({ state: 'visible' })
         await this.viewAnotherDateButton.click()
     }
 
     async clickViewButton(): Promise<void> {
+        await this.viewButton.waitFor({state:"visible"})
         await this.viewButton.click()
     }
 

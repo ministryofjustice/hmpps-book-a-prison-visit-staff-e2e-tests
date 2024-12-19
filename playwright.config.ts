@@ -1,14 +1,14 @@
 import { defineConfig, devices } from '@playwright/test'
 import { config as dotenvConfig } from 'dotenv'
-import ENV from './src/setup/env'
+import ENV from './playwright-e2e/setup/env'
 
 dotenvConfig()
 
 export default defineConfig({
-  globalSetup: './src/setup/globalSetup.ts', // Setup script for initializing tests
+  globalSetup: './playwright-e2e/setup/globalSetup.ts', // Setup script for initializing tests
   globalTimeout: 5 * 60_000, // 5 minutes
   timeout: 60_000, // 1 minute per test
-  testDir: './src/tests', // Directory containing test files
+  testDir: './playwright-e2e/tests', // Directory containing test files
   fullyParallel:  process.env.CI ? true : false, // Enable parallel only on CI
   forbidOnly: !!process.env.CI, // Forbid .only in CI
   retries: process.env.CI ? 1 : 0, // Retry failed tests once in CI

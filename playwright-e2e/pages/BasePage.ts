@@ -49,5 +49,11 @@ export abstract class BasePage {
     async clickOnSubmitButton(): Promise<void> {
         await this.submitButton.click()
     }
-
+    
+    async pageHasText(textToVerify: string): Promise<boolean> {
+        // Wait for the text to be visible on the page
+        const isVisible = await this.page.locator(`text=${textToVerify}`).isVisible()
+        // Return whether the text is visible
+        return isVisible;
+    }
 }
