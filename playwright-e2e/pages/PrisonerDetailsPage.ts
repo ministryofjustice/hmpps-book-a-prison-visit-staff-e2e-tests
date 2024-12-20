@@ -14,7 +14,7 @@ export default class PrisonerDetailsPage extends BasePage {
         super(page)
         this.bookAPrisonVisit = page.getByRole('button', { name: 'Book a prison visit' })
         this.cancelVisitButton = page.getByRole('button', { name: 'Cancel booking' })
-        this.visitRefNumber = page.locator('[class$=govuk-link--no-visited-state]')
+        this.visitRefNumber = page.locator('a.govuk-link--no-visited-state[href^="/visit/"]')
         this.prisonerCategory = page.locator('[data-test^=category]')
         this.prisonerIncentive = page.locator('[data-test^=iep-level]')
         this.prisonerLocation = page.locator('[data-test^=location]')
