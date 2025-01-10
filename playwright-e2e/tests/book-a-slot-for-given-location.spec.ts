@@ -17,7 +17,7 @@ test.describe('Staff should be able to book slots for various locations within t
         await loginPage.checkOnPage('HMPPS Digital Services - Sign in')
         await loginPage.signInWith(UserType.USER_FOUR)
         await homePage.displayBookOrChangeaVisit()
-        await homePage.checkOnPage('Manage prison visits - Manage prison visits')
+        await homePage.checkOnPage('Manage prison visits - DPS')
         await homePage.selectBookOrChangeVisit()
     })
     // Test case: Book an open slot
@@ -46,31 +46,31 @@ test.describe('Staff should be able to book slots for various locations within t
         expect(status).toBe(201)
 
         // Perform search and prisoner details validation    
-        await searchPage.checkOnPage('Manage prison visits - Search for a prisoner')
+        await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
         await searchPage.enterPrisonerNumber(prisonerNumber)
         await searchPage.selectPrisonerformResults()
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
         // Select visitors and book a slot    
-        expect(await selectorVisitorPage.checkOnPage('Manage prison visits - Select visitors from the prisoner’s approved visitor list'))
+        expect(await selectorVisitorPage.checkOnPage('Select visitors from the prisoner’s approved visitor list - Manage prison visits - DPS'))
         await selectorVisitorPage.selectFirstVisitor()
         await selectorVisitorPage.continueToNextPage()
         await visitTypePage.selectVisitType('open')
         await visitTypePage.continueToNextPage()
 
-        expect(await selectDateTimePage.checkOnPage('Manage prison visits - Select date and time of visit'))
+        expect(await selectDateTimePage.checkOnPage('Select date and time of visit - Manage prison visits - DPS'))
         expect(await selectDateTimePage.headerOnPage('Select date and time of visit'))
         await selectDateTimePage.selectFirstAvailableSlot()
         await selectDateTimePage.continueToNextPage()
 
         // Additional support selection
-        expect(await additionalSupportPage.checkOnPage('Manage prison visits - Is additional support needed for any of the visitors?'))
+        expect(await additionalSupportPage.checkOnPage('Is additional support needed for any of the visitors? - Manage prison visits - DPS'))
         expect(await additionalSupportPage.headerOnPage('Is additional support needed for any of the visitors?'))
         await additionalSupportPage.selectNoAdditionalSupportRequired()
         await additionalSupportPage.continueToNextPage()
 
         // Main contact selection
-        await mainContactPage.checkOnPage('Manage prison visits - Who is the main contact for this booking?')
+        await mainContactPage.checkOnPage('Who is the main contact for this booking? - Manage prison visits - DPS')
         expect(await mainContactPage.headerOnPage('Who is the main contact for this booking?'))
         await mainContactPage.selectMainContactForBooking()
         await mainContactPage.selectNoPhoneNumberProvided()
@@ -78,18 +78,18 @@ test.describe('Staff should be able to book slots for various locations within t
         await mainContactPage.continueToNextPage()
 
         // Booking method
-        await bookingMethodPage.checkOnPage('Manage prison visits - How was this booking requested?')
+        await bookingMethodPage.checkOnPage('How was this booking requested? - Manage prison visits - DPS')
         expect(await bookingMethodPage.headerOnPage('How was this booking requested?'))
         await bookingMethodPage.selectBookingMethod()
         await bookingMethodPage.continueToNextPage()
 
         // Complete booking
-        await checkYourBookingPage.checkOnPage('Manage prison visits - Check the visit details before booking')
+        await checkYourBookingPage.checkOnPage('Check the visit details before booking - Manage prison visits - DPS')
         expect(await checkYourBookingPage.headerOnPage('Check the visit details before booking'))
         const mainContactNameOnDetails = await checkYourBookingPage.getMainContactName()
         expect(mainContactNameOnDetails).toContain(mainContact)
         await checkYourBookingPage.selectSubmitBooking()
-        await bookingConfirmationPage.checkOnPage('Manage prison visits - Booking confirmed')
+        await bookingConfirmationPage.checkOnPage('Booking confirmed - Manage prison visits - DPS')
         expect(await bookingConfirmationPage.headerOnPage('Booking confirmed'))
         expect(await bookingConfirmationPage.displayBookingConfirmation()).toBeTruthy()
         const visitReference = await bookingConfirmationPage.getReferenceNumber()
@@ -127,30 +127,30 @@ test.describe('Staff should be able to book slots for various locations within t
         expect(status).toBe(201)
 
         // Perform search and prisoner details validation        
-        await searchPage.checkOnPage('Manage prison visits - Search for a prisoner')
+        await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
         await searchPage.enterPrisonerNumber(prisonerNumber)
         await searchPage.selectPrisonerformResults()
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
         // Select visitors and book a slot   
-        expect(await selectorVisitorPage.checkOnPage('Manage prison visits - Select visitors from the prisoner’s approved visitor list'))
+        expect(await selectorVisitorPage.checkOnPage('Select visitors from the prisoner’s approved visitor list - Manage prison visits - DPS'))
         await selectorVisitorPage.selectFirstVisitor()
         await selectorVisitorPage.continueToNextPage()
         await visitTypePage.selectVisitType('closed')
         await visitTypePage.continueToNextPage()
-        expect(await selectDateTimePage.checkOnPage('Manage prison visits - Select date and time of visit'))
+        expect(await selectDateTimePage.checkOnPage('Select date and time of visit - Manage prison visits - DPS'))
         expect(await selectDateTimePage.headerOnPage('Select date and time of visit'))
         await selectDateTimePage.selectFirstAvailableSlot()
         await selectDateTimePage.continueToNextPage()
 
         // Additional support selection
-        expect(await additionalSupportPage.checkOnPage('Manage prison visits - Is additional support needed for any of the visitors?'))
+        expect(await additionalSupportPage.checkOnPage('Is additional support needed for any of the visitors? - Manage prison visits - DPS'))
         expect(await additionalSupportPage.headerOnPage('Is additional support needed for any of the visitors?'))
         await additionalSupportPage.selectNoAdditionalSupportRequired()
         await additionalSupportPage.continueToNextPage()
 
         // Main contact selection
-        await mainContactPage.checkOnPage('Manage prison visits - Who is the main contact for this booking?')
+        await mainContactPage.checkOnPage('Who is the main contact for this booking? - Manage prison visits - DPS')
         expect(await mainContactPage.headerOnPage('Who is the main contact for this booking?'))
         await mainContactPage.selectMainContactForBooking()
         await mainContactPage.selectNoPhoneNumberProvided()
@@ -158,18 +158,18 @@ test.describe('Staff should be able to book slots for various locations within t
         await mainContactPage.continueToNextPage()
 
         // Booking method
-        await bookingMethodPage.checkOnPage('Manage prison visits - How was this booking requested?')
+        await bookingMethodPage.checkOnPage('How was this booking requested? - Manage prison visits - DPS')
         expect(await bookingMethodPage.headerOnPage('How was this booking requested?'))
         await bookingMethodPage.selectBookingMethod()
         await bookingMethodPage.continueToNextPage()
 
         // Complete Booking
-        await checkYourBookingPage.checkOnPage('Manage prison visits - Check the visit details before booking')
+        await checkYourBookingPage.checkOnPage('Check the visit details before booking - Manage prison visits - DPS')
         expect(await checkYourBookingPage.headerOnPage('Check the visit details before booking'))
         const mainContactNameOnDetails = await checkYourBookingPage.getMainContactName()
         expect(mainContactNameOnDetails).toContain(mainContact)
         await checkYourBookingPage.selectSubmitBooking()
-        await bookingConfirmationPage.checkOnPage('Manage prison visits - Booking confirmed')
+        await bookingConfirmationPage.checkOnPage('Booking confirmed - Manage prison visits - DPS')
         expect(await bookingConfirmationPage.headerOnPage('Booking confirmed'))
         expect(await bookingConfirmationPage.displayBookingConfirmation()).toBeTruthy()
         const visitReference = await bookingConfirmationPage.getReferenceNumber()
@@ -203,20 +203,20 @@ test.describe('Staff should be able to book slots for various locations within t
         console.log(sessionSlotTime)
 
         // Perform search and prisoner details validation     
-        await searchPage.checkOnPage('Manage prison visits - Search for a prisoner')
+        await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
         await searchPage.enterPrisonerNumber(prisonerNumber)
         await searchPage.selectPrisonerformResults()
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
         // Select visitors and book a slot   
-        expect(await selectorVisitorPage.checkOnPage('Manage prison visits - Select visitors from the prisoner’s approved visitor list'))
+        expect(await selectorVisitorPage.checkOnPage('Select visitors from the prisoner’s approved visitor list - Manage prison visits - DPS'))
         await selectorVisitorPage.selectFirstVisitor()
         await selectorVisitorPage.continueToNextPage()
         await visitTypePage.selectVisitType('open')
         await visitTypePage.continueToNextPage()
 
         // 9 am slot is not displayed as the prisoner doesn't match the location
-        expect(await selectDateTimePage.checkOnPage('Manage prison visits - Select date and time of visit'))
+        expect(await selectDateTimePage.checkOnPage('Select date and time of visit - Manage prison visits - DPS'))
         expect(await selectDateTimePage.headerOnPage('Select date and time of visit'))
         expect(await selectDateTimePage.pageHasText('There are no available time slots for this prisoner.'))
         //Signout of the service 

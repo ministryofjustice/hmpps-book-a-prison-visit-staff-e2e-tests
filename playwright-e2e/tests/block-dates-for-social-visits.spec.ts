@@ -14,7 +14,7 @@ test.describe('Staff should be able to block dates for social visits', () => {
         await loginPage.navigateTo('/')
         await loginPage.checkOnPage('HMPPS Digital Services - Sign in')
         await loginPage.signInWith(UserType.USER_THREE)
-        await homePage.checkOnPage('Manage prison visits - Manage prison visits')
+        await homePage.checkOnPage('Manage prison visits - DPS')
     })
 
     test('Block a vist date', async ({
@@ -24,7 +24,7 @@ test.describe('Staff should be able to block dates for social visits', () => {
 
         // Navigate to the Block Visit Dates page
         await homePage.clickOnBlockVisitDates()
-        await blockVisitDatePage.checkOnPage('Manage prison visits - Block visit dates')
+        await blockVisitDatePage.checkOnPage('Block visit dates - Manage prison visits - DPS')
         expect(await blockVisitDatePage.headerOnPage('Block visit dates')).toBeTruthy
 
         // Block a specific date
@@ -47,7 +47,7 @@ test.describe('Staff should be able to block dates for social visits', () => {
 
         // Navigate to Block Visit Dates page
         await homePage.clickOnBlockVisitDates()
-        await blockVisitDatePage.checkOnPage('Manage prison visits - Block visit dates')
+        await blockVisitDatePage.checkOnPage('Block visit dates - Manage prison visits - DPS')
         expect(await blockVisitDatePage.headerOnPage('Block visit dates')).toBeTruthy
 
         // Block the date and verify error message

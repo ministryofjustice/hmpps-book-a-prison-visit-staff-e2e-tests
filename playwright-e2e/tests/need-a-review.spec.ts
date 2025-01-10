@@ -14,7 +14,7 @@ test.describe('Staff should be able to review visits', () => {
         await loginPage.navigateTo('/')
         await loginPage.checkOnPage('HMPPS Digital Services - Sign in')
         await loginPage.signInWith(UserType.USER_ONE)
-        await homePage.checkOnPage('Manage prison visits - Manage prison visits')
+        await homePage.checkOnPage('Manage prison visits - DPS')
         await homePage.clickNeedReview()
     })
 
@@ -22,7 +22,7 @@ test.describe('Staff should be able to review visits', () => {
         needReviewPage
 
     }) => {
-        expect(await needReviewPage.checkOnPage('Manage prison visits - Visit bookings that need review')).toBeTruthy
+        expect(await needReviewPage.checkOnPage('Visit bookings that need review - Manage prison visits - DPS')).toBeTruthy
         await needReviewPage.clickNeedReviewList()
         // Display reasons for review checklist 
         expect(await needReviewPage.reviewResonsListIsVisible()).toBe(true)
