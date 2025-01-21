@@ -52,7 +52,7 @@ test.describe('Staff should be able to book slots for various categories', () =>
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
         // Select a visitor and time slot
-        expect(await selectorVisitorPage.checkOnPage('Select visitors from the prisoner’s approved visitor list - Manage prison visits - DPS'))
+        expect(await selectorVisitorPage.checkOnPage('Select visitors - Manage prison visits - DPS'))
         await selectorVisitorPage.selectFirstVisitor()
         await selectorVisitorPage.continueToNextPage()
 
@@ -128,7 +128,7 @@ test.describe('Staff should be able to book slots for various categories', () =>
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
         // Select a visitor and select a slot
-        expect(await selectorVisitorPage.checkOnPage('Select visitors from the prisoner’s approved visitor list - Manage prison visits - DPS'))
+        expect(await selectorVisitorPage.checkOnPage('Select visitors - Manage prison visits - DPS'))
         await selectorVisitorPage.selectFirstVisitor()
         await selectorVisitorPage.continueToNextPage()
 

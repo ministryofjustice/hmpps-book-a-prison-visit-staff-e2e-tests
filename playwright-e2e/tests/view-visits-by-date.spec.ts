@@ -41,7 +41,7 @@ test.describe('Staff should be able to view visits by date', () => {
 
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
-        expect(await selectorVisitorPage.checkOnPage('Select visitors from the prisoner’s approved visitor list - Manage prison visits - DPS'))
+        expect(await selectorVisitorPage.checkOnPage('Select visitors - Manage prison visits - DPS'))
         await selectorVisitorPage.selectFirstVisitor()
         await selectorVisitorPage.continueToNextPage()
 

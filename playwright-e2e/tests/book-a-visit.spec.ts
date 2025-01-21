@@ -40,7 +40,7 @@ test.describe('Staff should be able to book a visit using VSIP service', () => {
 
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
-        expect(await selectorVisitorPage.checkOnPage('Select visitors from the prisoner’s approved visitor list - Manage prison visits - DPS'))
+        expect(await selectorVisitorPage.checkOnPage('Select visitors - Manage prison visits - DPS'))
         await selectorVisitorPage.selectFirstVisitor()
         await selectorVisitorPage.continueToNextPage()
 
