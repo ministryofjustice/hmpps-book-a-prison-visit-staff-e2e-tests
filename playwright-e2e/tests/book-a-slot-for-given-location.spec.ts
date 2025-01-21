@@ -52,7 +52,7 @@ test.describe('Staff should be able to book slots for various locations within t
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
         // Select visitors and book a slot    
-        expect(await selectorVisitorPage.checkOnPage('Select visitors from the prisoner’s approved visitor list - Manage prison visits - DPS'))
+        expect(await selectorVisitorPage.checkOnPage('Select visitors - Manage prison visits - DPS'))
         await selectorVisitorPage.selectFirstVisitor()
         await selectorVisitorPage.continueToNextPage()
         await visitTypePage.selectVisitType('open')
@@ -133,7 +133,7 @@ test.describe('Staff should be able to book slots for various locations within t
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
         // Select visitors and book a slot   
-        expect(await selectorVisitorPage.checkOnPage('Select visitors from the prisoner’s approved visitor list - Manage prison visits - DPS'))
+        expect(await selectorVisitorPage.checkOnPage('Select visitors - Manage prison visits - DPS'))
         await selectorVisitorPage.selectFirstVisitor()
         await selectorVisitorPage.continueToNextPage()
         await visitTypePage.selectVisitType('closed')
@@ -209,7 +209,7 @@ test.describe('Staff should be able to book slots for various locations within t
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
         // Select visitors and book a slot   
-        expect(await selectorVisitorPage.checkOnPage('Select visitors from the prisoner’s approved visitor list - Manage prison visits - DPS'))
+        expect(await selectorVisitorPage.checkOnPage('Select visitors - Manage prison visits - DPS'))
         await selectorVisitorPage.selectFirstVisitor()
         await selectorVisitorPage.continueToNextPage()
         await visitTypePage.selectVisitType('open')

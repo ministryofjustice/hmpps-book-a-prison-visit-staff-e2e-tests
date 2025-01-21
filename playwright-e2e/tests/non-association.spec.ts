@@ -54,7 +54,7 @@ test.describe('Staff should not be able to book visits for non-assocaition priso
 
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
-        expect(await selectorVisitorPage.checkOnPage('Select visitors from the prisoner’s approved visitor list - Manage prison visits - DPS'))
+        expect(await selectorVisitorPage.checkOnPage('Select visitors - Manage prison visits - DPS'))
         await selectorVisitorPage.selectFirstVisitor()
         await selectorVisitorPage.continueToNextPage()
 
@@ -107,7 +107,7 @@ test.describe('Staff should not be able to book visits for non-assocaition priso
 
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
-        expect(await selectorVisitorPage.checkOnPage('Select visitors from the prisoner’s approved visitor list - Manage prison visits - DPS'))
+        expect(await selectorVisitorPage.checkOnPage('Select visitors - Manage prison visits - DPS'))
         await selectorVisitorPage.selectFirstVisitor()
         await selectorVisitorPage.continueToNextPage()
 

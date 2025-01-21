@@ -71,7 +71,7 @@ test.describe('Error message validations', () => {
         })
 
         await test.step('Validate error for no visit type selected', async () => {
-            await selectorVisitorPage.checkOnPage('Select visitors from the prisoner’s approved visitor list - Manage prison visits - DPS')
+            await selectorVisitorPage.checkOnPage('Select visitors - Manage prison visits - DPS')
             await selectorVisitorPage.selectFirstVisitor()
             await selectorVisitorPage.continueToNextPage()
             await visitTypePage.headerOnPage("Check the prisoner's closed visit restrictions")
