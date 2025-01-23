@@ -34,9 +34,12 @@ test.describe('Staff should be able to view visits by date', () => {
 
     }) => {
         test.slow()
+        const prisonerNum = 'A6036DZ'
+        const visitRoomCaption = 'Visits Main Room'
+
         await homePage.selectBookOrChangeVisit()
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
-        await searchPage.enterPrisonerNumber('A6036DZ')
+        await searchPage.enterPrisonerNumber(prisonerNum)
         await searchPage.selectPrisonerformResults()
 
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
@@ -93,9 +96,13 @@ test.describe('Staff should be able to view visits by date', () => {
         const formattedDate = format(bookingDate, 'd MMMM')
         const prisonerName = await visitByDatesPage.getPrisonerName()
         const prisonerNumber = await visitByDatesPage.getPrisonerNumber()
+        const prisonRoomName = await visitByDatesPage.getPrisonerRoomName()
+        const roomNames = await visitByDatesPage.getPrisonerRoomName()
         expect(bookedDate).toContain(formattedDate + " at ")
         expect(prisonerName).toContain('Vsip_prisoner01, Do not use')
-        expect(prisonerNumber).toContain('A6036DZ')
+        expect(prisonerNumber).toContain(prisonerNum)
+        expect(prisonRoomName).toContain(visitRoomCaption)
+        expect(roomNames).toContain('Visits Main Room')
 
         console.log('Confirmation message:', visitReference)
         console.log("bookeddate:", bookedDate, "Parsed date:", parsedDate, "formattedDate:", formattedDate)

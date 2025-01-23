@@ -10,6 +10,8 @@ export default class VisitsByDatesPage extends BasePage {
     private readonly bookedOnDate: Locator
     private readonly prisonerName: Locator
     private readonly prisonerNumber: Locator
+    private readonly visitRoomName: Locator
+    private readonly availableRooms: Locator
 
     constructor(page: Page) {
         super(page);
@@ -21,6 +23,8 @@ export default class VisitsByDatesPage extends BasePage {
         this.bookedOnDate = page.locator('[data-test="booked-on"]')
         this.prisonerName = page.locator('[data-test="prisoner-name"]')
         this.prisonerNumber = page.locator('[data-test="prisoner-number"]')
+        this.visitRoomName = page.locator('[data-test="visit-room-caption"]')
+        this.availableRooms = page.locator('h4')
     }
 
     async clickViewAnotherDateButton(): Promise<void> {
@@ -55,5 +59,14 @@ export default class VisitsByDatesPage extends BasePage {
 
     async getPrisonerNumber(): Promise<string> {
         return this.prisonerNumber.innerText()
+    }
+   
+    async getPrisonerRoomName(): Promise<string> {
+        return this.visitRoomName.innerText()
+    }
+
+    async getAvailbleRoomsName(): Promise<string> {
+        const rooms = await this.availableRooms.textContent()
+        return rooms || ''
     }
 }
