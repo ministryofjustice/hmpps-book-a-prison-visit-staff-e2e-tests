@@ -33,9 +33,10 @@ test.describe('Staff should be able to book a visit for visitors that need addit
 
     }) => {
         test.slow()
+         const prisonerNum = 'A6036DZ'
 
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
-        await searchPage.enterPrisonerNumber('A6036DZ')
+        await searchPage.enterPrisonerNumber(prisonerNum)
         await searchPage.selectPrisonerformResults()
 
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
