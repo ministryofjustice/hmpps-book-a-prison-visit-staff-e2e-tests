@@ -1,6 +1,6 @@
 import { test, expect } from '../fixtures/PageFixtures'
 import GlobalData from '../setup/GlobalData'
-import { deleteVisit, getAccessToken } from '../support/testingHelperClient'
+import { deleteVisit, excludeDate, getAccessToken, removeExcludeDate } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
 
 test.beforeAll('Get access token and store so it is available as global data', async ({ request }, testInfo) => {
@@ -8,18 +8,18 @@ test.beforeAll('Get access token and store so it is available as global data', a
     GlobalData.set('deviceName', testInfo.project.name)
 })
 
-test.describe('Staff should be able to book a visit using VSIP service', () => {
+test.describe('Staff should be able to view dates that have been excluded and amend reviews as required', () => {
 
     test.beforeEach(async ({ loginPage, homePage }) => {
         await loginPage.navigateTo('/')
         await loginPage.checkOnPage('HMPPS Digital Services - Sign in')
-        await loginPage.signInWith(UserType.USER_ONE)
+        await loginPage.signInWith(UserType.USER_THREE)
         await homePage.displayBookOrChangeaVisit()
         await homePage.checkOnPage('Manage prison visits - DPS')
         await homePage.selectBookOrChangeVisit()
     })
 
-    test('Search for a prisoner & book a visit with one visitor and no additional support', async ({
+    test('Exclude the booking date once booked and review the reason for the notification.', async ({
 
         searchPage,
         prisonerDetailsPage,
@@ -29,11 +29,16 @@ test.describe('Staff should be able to book a visit using VSIP service', () => {
         mainContactPage,
         bookingMethodPage,
         checkYourBookingPage,
-        bookingConfirmationPage
+        bookingConfirmationPage,
+        request,
+        needReviewPage,
+        homePage,
+        bookingDetailsPage
 
     }) => {
         test.slow()
         const prisonerNumber = "A6036DZ"
+        const prisonCode = "HEI"
 
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
         await searchPage.enterPrisonerNumber(prisonerNumber)
@@ -77,11 +82,29 @@ test.describe('Staff should be able to book a visit using VSIP service', () => {
         expect(await bookingConfirmationPage.headerOnPage('Booking confirmed'))
         expect(await bookingConfirmationPage.displayBookingConfirmation()).toBeTruthy()
         const visitReference = await bookingConfirmationPage.getReferenceNumber()
+        const visitDate = await bookingConfirmationPage.getVisitBookedForDate()
+        const dateToExclude = new Date(visitDate)
 
+        // Add Exclude date event
+        const status = await excludeDate({ request }, prisonCode, dateToExclude)
+        expect(status).toBe(201)
+
+        await bookingConfirmationPage.clickOnManagePrisonVisits()
+        await homePage.clickNeedReview()
+        await needReviewPage.clickNeedReviewList()
+        expect(await needReviewPage.reviewResonsListIsVisible()).toBe(true)
+        await needReviewPage.clickViewReasonLink()
+        expect(await bookingDetailsPage.notificationOnPage('A new visit time should be selected as the date is no longer available for social visits.'))
         await bookingConfirmationPage.signOut()
 
+        // Remove Exclude date event
+
+        const removeExludeDatestatus = await removeExcludeDate({ request }, prisonCode, dateToExclude)
+        expect(removeExludeDatestatus).toBe(201)
+
         GlobalData.set('visitReference', visitReference)
-        console.log('Confirmation message:', visitReference)
+        console.debug('Confirmation message:', visitReference)
+        console.debug("Visit Date is:", visitDate)
 
     })
 

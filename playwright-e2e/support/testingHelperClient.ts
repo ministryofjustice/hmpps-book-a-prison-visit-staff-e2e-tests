@@ -157,6 +157,59 @@ export const createVisit = async ({ request }: { request: APIRequestContext }, a
 }
 
 
+export const excludeDate = async (
+  { request }: { request: APIRequestContext },
+  prisonCode: string,
+  date: Date,
+  logger: Console = console // Default to console if no logger is provided
+): Promise<number> => {  // Return the status code as a number
+  if (!prisonCode) {
+    throw new Error("Prison code must not be empty");
+  }
+  if (!date || isNaN(date.getTime())) {
+    throw new Error("Invalid date provided");
+  }
+
+  logger.debug(`Enter excludeDate: ${date.toISOString()}`);
+
+  const requestBody = { notificationEvent: "PRISON_VISITS_BLOCKED_FOR_DATE" };
+  const jsonDate = date.toISOString().split('T')[0]; // Standard ISO format for API calls
+
+  try {
+    const accessToken = globalData.get('authToken');
+    if (!accessToken) {
+      throw new Error('Access token not found');
+    }
+
+    const response = await request.put(
+      `${testHelperUri}/test/prison/${prisonCode}/add/exclude-date/${jsonDate}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        data: requestBody,
+      }
+    );
+
+    if (!response.ok()) {
+      const errorMessage = await response.text();
+      throw new Error(
+        `Failed to add visit exclude date event for prison ${prisonCode} on ${jsonDate}: ${response.status()} - ${errorMessage}`
+      );
+    }
+
+    return response.status();  // Return the status code instead of the full response
+  } catch (error) {
+    logger.error(
+      `Failed to add visit exclude date event for prison ${prisonCode} on ${jsonDate}`,
+      error
+    );
+    throw new Error("Failed to add visit exclude date event");
+  }
+}
+
+
 export const createSessionTemplate = async (
   { request }: { request: APIRequestContext },
   sessionStartDateTime: Date,
@@ -239,4 +292,57 @@ export const getSlotDataTestValue = (localDate: Date, startSlot: number, endSlot
 
   // Format the result
   return `${localDate.toISOString().split('T')[0]} - ${formatTime(startTime)} to ${formatTime(endTime)}`
+}
+
+
+export const removeExcludeDate = async (
+  { request }: { request: APIRequestContext },
+  prisonCode: string,
+  date: Date,
+  logger: Console = console // Default to console if no logger is provided
+): Promise<number> => {  // Return the status code as a number
+  if (!prisonCode) {
+    throw new Error("Prison code must not be empty");
+  }
+  if (!date || isNaN(date.getTime())) {
+    throw new Error("Invalid date provided");
+  }
+
+  logger.debug(`Enter excludeDate: ${date.toISOString()}`);
+
+  const requestBody = { notificationEvent: "PRISON_VISITS_BLOCKED_FOR_DATE" };
+  const jsonDate = date.toISOString().split('T')[0]; // Standard ISO format for API calls
+
+  try {
+    const accessToken = globalData.get('authToken');
+    if (!accessToken) {
+      throw new Error('Access token not found');
+    }
+
+    const response = await request.put(
+      `${testHelperUri}/test/prison/${prisonCode}/remove/exclude-date/${jsonDate}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        data: requestBody,
+      }
+    );
+
+    if (!response.ok()) {
+      const errorMessage = await response.text();
+      throw new Error(
+        `Failed to remove visit exclude date event for prison ${prisonCode} on ${jsonDate}: ${response.status()} - ${errorMessage}`
+      );
+    }
+
+    return response.status();  // Return the status code instead of the full response
+  } catch (error) {
+    logger.error(
+      `Failed to remove visit exclude date event for prison ${prisonCode} on ${jsonDate}`,
+      error
+    );
+    throw new Error("Failed to remove visit exclude date event");
+  }
 }
