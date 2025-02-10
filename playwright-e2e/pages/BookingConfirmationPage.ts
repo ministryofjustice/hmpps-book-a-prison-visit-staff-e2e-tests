@@ -7,6 +7,7 @@ export default class BookingConfirmationPage extends BasePage {
   private readonly cancelTheBookingLink: Locator
   private readonly additionalSupportDetails: Locator
   private readonly prisonerNumber: Locator
+  private readonly visitDate: Locator
 
   constructor(page: Page) {
     super(page)
@@ -16,6 +17,7 @@ export default class BookingConfirmationPage extends BasePage {
     this.managePrisonVisitsButton = page.getByRole('button', { name: 'Go to manage prison visits' })
     this.cancelTheBookingLink = page.getByText('cancel the booking')
     this.prisonerNumber = this.page.locator('.govuk-summary-list__value.test-visit-prisoner-number')
+    this.visitDate = this.page.locator('.govuk-summary-list__value.test-visit-date')
   }
 
   async displayBookingConfirmation(): Promise<string> {
@@ -44,4 +46,10 @@ export default class BookingConfirmationPage extends BasePage {
     const prisonerNum = this.prisonerNumber
     return prisonerNum.innerText()
   }
+
+  async getVisitBookedForDate(): Promise<string> {
+    const bookedVisitDate = this.visitDate
+    return bookedVisitDate.innerText()
+  }
+
 }
