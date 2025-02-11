@@ -16,6 +16,18 @@ test.describe('Staff should be able to view dates that have been excluded and am
         await loginPage.signInWith(UserType.USER_THREE)
         await homePage.displayBookOrChangeaVisit()
         await homePage.checkOnPage('Manage prison visits - DPS')
+        await homePage.clickOnChangeEstablishment()
+        await homePage.selectEstablishment('Hewell (HMP)')
+        await homePage.clickOnSubmitButton()
+        await homePage.clickOnManagePrisonVisits()
+        await homePage.displayBookOrChangeaVisit()
+        await homePage.checkOnPage('Manage prison visits - DPS')
+        await homePage.selectBookOrChangeVisit()
+
+        // Switching the URL to 'staging' because selecting 'Change Establishment' sets the environment to 'Dev',
+        // and DSP does not have a 'Staging' environment.
+
+        await homePage.navigateTo('/')
         await homePage.selectBookOrChangeVisit()
     })
 
