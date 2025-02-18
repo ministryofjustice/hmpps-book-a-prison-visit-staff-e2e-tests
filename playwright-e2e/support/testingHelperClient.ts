@@ -156,7 +156,6 @@ export const createVisit = async ({ request }: { request: APIRequestContext }, a
   return res
 }
 
-
 export const excludeDate = async (
   { request }: { request: APIRequestContext },
   prisonCode: string,
@@ -242,7 +241,6 @@ export const createSessionTemplate = async (
       category,
       disableAllOtherSessionsForSlotAndPrison,
       sessionName
-      
     }
 
     // Send the PUT request
@@ -344,5 +342,29 @@ export const removeExcludeDate = async (
       error
     );
     throw new Error("Failed to remove visit exclude date event");
+  }
+}
+
+export const releasePrisoner = async ({
+  request,
+  prisonCode,
+  prisonerCode,
+  reason
+}: { request: APIRequestContext; prisonCode: string; prisonerCode: string; reason: string }) => {
+  const accessToken = globalData.get("authToken");
+
+  try {
+    const response = await request.put(`${testHelperUri}/test/prisoner/released`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      data: { prisonCode, prisonerCode, reason },
+    })
+
+    return { status: response.status() }
+  } catch (error) {
+    console.error("Error releasing prisoner:", error)
+    throw new Error("Failed to release prisoner")
   }
 }
