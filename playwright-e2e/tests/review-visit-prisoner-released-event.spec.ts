@@ -5,6 +5,7 @@ import GlobalData from '../setup/GlobalData'
 import { loginAndNavigate } from '../support/commonMethods'
 import { deleteVisit, getAccessToken, releasePrisoner } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
+import Constants from '../setup/Constants'
 
 test.beforeAll('Get access token and store so it is available as global data', async ({ request }, testInfo) => {
     GlobalData.set('authToken', await getAccessToken({ request }))
@@ -14,7 +15,7 @@ test.beforeAll('Get access token and store so it is available as global data', a
 test.describe('A visit is marked for review when prisoners are released after the booking is made.', () => {
 
     test.beforeEach(async ({ page }) => {
-        await loginAndNavigate(page,UserType.USER_TWO)
+        await loginAndNavigate(page, UserType.USER_TWO)
     })
 
     test('Visit needs a review after a prisoner release event ', async ({
@@ -36,11 +37,9 @@ test.describe('A visit is marked for review when prisoners are released after th
 
     }) => {
         test.slow()
-        const prisonerNumber = "A6539DZ"
-        const prisonCode = "HEI"
 
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
-        await searchPage.enterPrisonerNumber(prisonerNumber)
+        await searchPage.enterPrisonerNumber(Constants.PRISONER_ONE)
         await searchPage.selectPrisonerformResults()
 
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
@@ -84,8 +83,8 @@ test.describe('A visit is marked for review when prisoners are released after th
 
         const res = await releasePrisoner({
             request,
-            prisonCode: prisonCode,
-            prisonerCode: prisonerNumber,
+            prisonCode: Constants.PRISON_ONE_CODE,
+            prisonerCode: Constants.PRISONER_ONE,
             reason: "RELEASED",
         })
         expect(res.status).toBe(201)

@@ -1,4 +1,5 @@
 import { test, expect } from '../fixtures/PageFixtures'
+import Constants from '../setup/Constants'
 import GlobalData from '../setup/GlobalData'
 import { createSessionTemplate, getAccessToken, deleteVisit, } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
@@ -42,12 +43,12 @@ test.describe('Staff should be able to book slots for various locations within t
         sessionSlotTime.setHours(9, 0, 0, 0); // Set to 9:00 AM
         const prisonCode = "DHI"
         const prisonerNumber = 'A8899DZ'
-        let status = await createSessionTemplate({ request }, sessionSlotTime, prisonCode, 1, 0, 1, "I-1-003", null, null, true, "Automation Tests")
+        let status = await createSessionTemplate({ request }, sessionSlotTime, Constants.PRISON_TWO_CODE, 1, 0, 1, "I-1-003", null, null, true, "Automation Tests")
         expect(status).toBe(201)
 
         // Perform search and prisoner details validation    
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
-        await searchPage.enterPrisonerNumber(prisonerNumber)
+        await searchPage.enterPrisonerNumber(Constants.PRISONER_FOUR)
         await searchPage.selectPrisonerformResults()
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
@@ -121,14 +122,12 @@ test.describe('Staff should be able to book slots for various locations within t
         const sessionSlotTime = new Date();
         sessionSlotTime.setDate(sessionSlotTime.getDate() + 2); // Add 2 days
         sessionSlotTime.setHours(9, 0, 0, 0); // Set to 9:00 AM
-        const prisonCode = "DHI"
-        const prisonerNumber = 'A8899DZ'
-        let status = await createSessionTemplate({ request }, sessionSlotTime, prisonCode, 1, 1, 0, "I-1-003", null, null, true, "Automation Tests")
+        let status = await createSessionTemplate({ request }, sessionSlotTime, Constants.PRISON_TWO_CODE, 1, 1, 0, "I-1-003", null, null, true, "Automation Tests")
         expect(status).toBe(201)
 
         // Perform search and prisoner details validation        
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
-        await searchPage.enterPrisonerNumber(prisonerNumber)
+        await searchPage.enterPrisonerNumber(Constants.PRISONER_FOUR)
         await searchPage.selectPrisonerformResults()
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
@@ -198,13 +197,13 @@ test.describe('Staff should be able to book slots for various locations within t
         sessionSlotTime.setHours(9, 0, 0, 0); // Set to 9:00 AM
         const prisonCode = "DHI"
         const prisonerNumber = 'A8899DZ'
-        let status = await createSessionTemplate({ request }, sessionSlotTime, prisonCode, 1, 0, 1, "IM-NOT-HERE", null, null, true, "Automation Tests")
+        let status = await createSessionTemplate({ request }, sessionSlotTime, Constants.PRISON_TWO_CODE, 1, 0, 1, "IM-NOT-HERE", null, null, true, "Automation Tests")
         expect(status).toBe(201)
         console.log(sessionSlotTime)
 
         // Perform search and prisoner details validation     
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
-        await searchPage.enterPrisonerNumber(prisonerNumber)
+        await searchPage.enterPrisonerNumber(Constants.PRISONER_FOUR)
         await searchPage.selectPrisonerformResults()
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 

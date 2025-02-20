@@ -1,26 +1,21 @@
 import { test, expect } from '../fixtures/PageFixtures'
-import Constants from '../setup/Constants'
 import GlobalData from '../setup/GlobalData'
-import { deleteVisit, getAccessToken } from '../support/testingHelperClient'
+import { loginAndNavigate } from '../support/commonMethods'
+import { deleteVisit, getAccessToken, releasePrisoner } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
-
+import Constants from '../setup/Constants'
 test.beforeAll('Get access token and store so it is available as global data', async ({ request }, testInfo) => {
     GlobalData.set('authToken', await getAccessToken({ request }))
     GlobalData.set('deviceName', testInfo.project.name)
 })
 
-test.describe('Staff should be able to book a visit for visitors that need additional support', () => {
+test.describe('A visit is flagged for review when a prisoner is released after booking, allowing staff to take multiple actions', () => {
 
-    test.beforeEach(async ({ loginPage, homePage }) => {
-        await loginPage.navigateTo('/')
-        await loginPage.checkOnPage('HMPPS Digital Services - Sign in')
-        await loginPage.signInWith(UserType.USER_ONE)
-        await homePage.displayBookOrChangeaVisit()
-        await homePage.checkOnPage('Manage prison visits - DPS')
-        await homePage.selectBookOrChangeVisit()
+    test.beforeEach(async ({ page }) => {
+        await loginAndNavigate(page,UserType.USER_TWO)
     })
 
-    test('Search for a prisoner & book a visit with one visitor and additional support', async ({
+    test('Do not modify a review, display an error if no reason is provided, and allow updates.', async ({
 
         searchPage,
         prisonerDetailsPage,
@@ -30,13 +25,19 @@ test.describe('Staff should be able to book a visit for visitors that need addit
         mainContactPage,
         bookingMethodPage,
         checkYourBookingPage,
-        bookingConfirmationPage
+        bookingConfirmationPage,
+        request,
+        homePage,
+        needReviewPage,
+        bookingDetailsPage,
+        page,
+        clearNotificationPage
 
     }) => {
         test.slow()
-
+       
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
-        await searchPage.enterPrisonerNumber(Constants.PRISONER_TWO)
+        await searchPage.enterPrisonerNumber(Constants.PRISONER_ONE)
         await searchPage.selectPrisonerformResults()
 
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
@@ -52,7 +53,7 @@ test.describe('Staff should be able to book a visit for visitors that need addit
 
         expect(await additionalSupportPage.checkOnPage('Is additional support needed for any of the visitors? - Manage prison visits - DPS'))
         expect(await additionalSupportPage.headerOnPage('Is additional support needed for any of the visitors?'))
-        await additionalSupportPage.selectAdditionalSupportRequired()
+        await additionalSupportPage.selectNoAdditionalSupportRequired()
         await additionalSupportPage.continueToNextPage()
 
         await mainContactPage.checkOnPage('Who is the main contact for this booking? - Manage prison visits - DPS')
@@ -71,17 +72,36 @@ test.describe('Staff should be able to book a visit for visitors that need addit
         expect(await checkYourBookingPage.headerOnPage('Check the visit details before booking'))
         const mainContactNameOnDetails = await checkYourBookingPage.getMainContactName()
         expect(mainContactNameOnDetails).toContain(mainContact)
-        const addSupportDetails = await checkYourBookingPage.getAdditionalDetailsInfo()
-        expect(addSupportDetails).toContain('Wheelchair')
         await checkYourBookingPage.selectSubmitBooking()
 
         await bookingConfirmationPage.checkOnPage('Booking confirmed - Manage prison visits - DPS')
         expect(await bookingConfirmationPage.headerOnPage('Booking confirmed'))
         expect(await bookingConfirmationPage.displayBookingConfirmation()).toBeTruthy()
         const visitReference = await bookingConfirmationPage.getReferenceNumber()
-        const addSupportDetailsOnConfirmationPage = await bookingConfirmationPage.getAdditionalDetailsInfo()
-        expect(addSupportDetailsOnConfirmationPage).toContain('Wheelchair')
-        await bookingConfirmationPage.signOut()
+
+        const res = await releasePrisoner({
+            request,
+            prisonCode: Constants.PRISON_ONE_CODE,
+            prisonerCode: Constants.PRISONER_ONE,
+            reason: "RELEASED",
+        })
+        expect(res.status).toBe(201)
+
+        await page.waitForTimeout(3000)
+        await bookingConfirmationPage.clickOnManagePrisonVisits()
+        await homePage.clickNeedReview()
+        await needReviewPage.clickNeedReviewList()
+        expect(await needReviewPage.reviewResonsListIsVisible()).toBe(true)
+        await needReviewPage.clickViewReasonLink()
+        expect(await bookingDetailsPage.notificationOnPage('This booking should be cancelled as the prisoner has been released.'))
+        await bookingDetailsPage.clickOnDoNotChangeButton()
+        
+        expect(await clearNotificationPage.headerOnPage('Are you sure the visit does not need to be updated or cancelled?'))
+        await clearNotificationPage.confirmDoNotChange()
+        await clearNotificationPage.continueToNextPage()
+
+        await bookingDetailsPage.doNotChangeBtnIsNotDisplayed()
+        await bookingDetailsPage.signOut()
 
         GlobalData.set('visitReference', visitReference)
         console.log('Confirmation message:', visitReference)
@@ -89,12 +109,16 @@ test.describe('Staff should be able to book a visit for visitors that need addit
     })
 
     test.afterAll('Teardown test data', async ({ request }) => {
-        let visitRef = GlobalData.getAll('visitReference')
-        for (const visitId of visitRef) {
-            await deleteVisit({ request }, visitId)
+        try {
+            let visitRef = GlobalData.getAll('visitReference')
+            for (const visitId of visitRef) {
+                await deleteVisit({ request }, visitId)
+            }
+        } finally {
+            // Clear global data cache
+            GlobalData.clear()
+            console.log('Global data cache cleared.')
         }
     })
-    // Clear global data cache
-    GlobalData.clear()
-    console.log('Global data cache cleared.')
+
 })

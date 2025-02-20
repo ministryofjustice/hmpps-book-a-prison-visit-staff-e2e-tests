@@ -17,4 +17,4 @@ playwright-report/
 
 .idea
 playwright/.auth
-
+.vscode/

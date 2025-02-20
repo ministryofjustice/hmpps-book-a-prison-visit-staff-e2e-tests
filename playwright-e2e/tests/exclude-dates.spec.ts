@@ -1,4 +1,5 @@
 import { test, expect } from '../fixtures/PageFixtures'
+import Constants from '../setup/Constants'
 import GlobalData from '../setup/GlobalData'
 import { deleteVisit, excludeDate, getAccessToken, removeExcludeDate } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
@@ -49,11 +50,9 @@ test.describe('Staff should be able to view dates that have been excluded and am
 
     }) => {
         test.slow()
-        const prisonerNumber = "A6036DZ"
-        const prisonCode = "HEI"
 
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
-        await searchPage.enterPrisonerNumber(prisonerNumber)
+        await searchPage.enterPrisonerNumber(Constants.PRISONER_TWO)
         await searchPage.selectPrisonerformResults()
 
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
@@ -98,7 +97,7 @@ test.describe('Staff should be able to view dates that have been excluded and am
         const dateToExclude = new Date(visitDate)
 
         // Add Exclude date event
-        const status = await excludeDate({ request }, prisonCode, dateToExclude)
+        const status = await excludeDate({ request }, Constants.PRISON_ONE_CODE, dateToExclude)
         expect(status).toBe(201)
 
         await bookingConfirmationPage.clickOnManagePrisonVisits()
@@ -111,7 +110,7 @@ test.describe('Staff should be able to view dates that have been excluded and am
 
         // Remove Exclude date event
 
-        const removeExludeDatestatus = await removeExcludeDate({ request }, prisonCode, dateToExclude)
+        const removeExludeDatestatus = await removeExcludeDate({ request }, Constants.PRISON_ONE_CODE, dateToExclude)
         expect(removeExludeDatestatus).toBe(201)
 
         GlobalData.set('visitReference', visitReference)
