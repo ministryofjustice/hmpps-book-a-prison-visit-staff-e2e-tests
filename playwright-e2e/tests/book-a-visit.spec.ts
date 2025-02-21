@@ -1,4 +1,5 @@
 import { test, expect } from '../fixtures/PageFixtures'
+import Constants from '../setup/Constants'
 import GlobalData from '../setup/GlobalData'
 import { deleteVisit, getAccessToken } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
@@ -33,10 +34,9 @@ test.describe('Staff should be able to book a visit using VSIP service', () => {
 
     }) => {
         test.slow()
-        const prisonerNumber = "A6036DZ"
 
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
-        await searchPage.enterPrisonerNumber(prisonerNumber)
+        await searchPage.enterPrisonerNumber(Constants.PRISONER_TWO)
         await searchPage.selectPrisonerformResults()
 
         await prisonerDetailsPage.clickOnBookAPrisonVisit()

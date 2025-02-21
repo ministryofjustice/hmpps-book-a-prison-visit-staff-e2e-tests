@@ -1,4 +1,5 @@
 import { test, expect } from '../fixtures/PageFixtures'
+import Constants from '../setup/Constants'
 import GlobalData from '../setup/GlobalData'
 import { deleteVisit, getAccessToken } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
@@ -34,12 +35,11 @@ test.describe('Staff should be able to view visits by date', () => {
 
     }) => {
         test.slow()
-        const prisonerNum = 'A6036DZ'
         const visitRoomCaption = 'Visits Main Room'
 
         await homePage.selectBookOrChangeVisit()
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
-        await searchPage.enterPrisonerNumber(prisonerNum)
+        await searchPage.enterPrisonerNumber(Constants.PRISONER_TWO)
         await searchPage.selectPrisonerformResults()
 
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
@@ -100,7 +100,7 @@ test.describe('Staff should be able to view visits by date', () => {
         const roomNames = await visitByDatesPage.getPrisonerRoomName()
         expect(bookedDate).toContain(formattedDate + " at ")
         expect(prisonerName).toContain('Vsip_prisoner01, Do not use')
-        expect(prisonerNumber).toContain(prisonerNum)
+        expect(prisonerNumber).toContain(Constants.PRISONER_TWO)
         expect(prisonRoomName).toContain(visitRoomCaption)
         expect(roomNames).toContain('Visits Main Room')
 

@@ -52,7 +52,7 @@ test.describe('Staff should be able to block dates for social visits', () => {
 
         // Block the date and verify error message
         await blockVisitDatePage.enterDateToBlock(blockedDate)
-        await blockVisitDatePage.continueToNextPage();
+        await blockVisitDatePage.continueToNextPage()
         expect(await blockVisitDatePage.errorMsg('The date entered is already blocked')).toBeTruthy
 
         // Unblock the date and verify confirmation message
@@ -60,6 +60,6 @@ test.describe('Staff should be able to block dates for social visits', () => {
         expect(await blockVisitDatePage.confirmationMessage('Visits are unblocked for Wednesday 25 November 2026.')).toBeTruthy
 
         // Sign out
-        await blockVisitDatePage.signOut();
+        await blockVisitDatePage.signOut()
     })
 })

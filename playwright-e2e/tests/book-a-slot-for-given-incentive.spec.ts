@@ -1,4 +1,5 @@
 import { test, expect } from '../fixtures/PageFixtures'
+import Constants from '../setup/Constants'
 import GlobalData from '../setup/GlobalData'
 import { createSessionTemplate, getAccessToken, deleteVisit, deleteTemplate, getSlotDataTestValue } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
@@ -121,14 +122,12 @@ test.describe('Staff should be able to book slots for various incentives', () =>
         const sessionSlotTime = new Date();
         sessionSlotTime.setDate(sessionSlotTime.getDate() + 2); // Add 2 days
         sessionSlotTime.setHours(9, 0, 0, 0); // Set to 9:00 AM
-        const prisonCode = "DHI"
-        const prisonerNumber = 'A8900DZ'
-        let status = await createSessionTemplate({ request }, sessionSlotTime, prisonCode, 1, 1, 0, null, "STANDARD", "FEMALE_CLOSED", false, "Automation Tests")
+        let status = await createSessionTemplate({ request }, sessionSlotTime, Constants.PRISON_TWO_CODE, 1, 1, 0, null, "STANDARD", "FEMALE_CLOSED", false, "Automation Tests")
         expect(status).toBe(201)
 
         // Perform search and prisoner details validation        
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
-        await searchPage.enterPrisonerNumber(prisonerNumber)
+        await searchPage.enterPrisonerNumber(Constants.PRISONER_THREE)
         await searchPage.selectPrisonerformResults()
         const prisonerCat = await prisonerDetailsPage.getPrisonerCategory()
         const prinsonerIncentive = await prisonerDetailsPage.getPrisonerIncentive()
@@ -182,7 +181,7 @@ test.describe('Staff should be able to book slots for various incentives', () =>
         console.debug('Confirmation message:', visitReference)
 
     })
-    
+
     // Test case - Only valids slot that match the prisoner incentiver are visible 
     test("Only slots matching prisoner's incentive are displayed", async ({
         searchPage,
@@ -197,15 +196,13 @@ test.describe('Staff should be able to book slots for various incentives', () =>
         const sessionSlotTime = new Date();
         sessionSlotTime.setDate(sessionSlotTime.getDate() + 2); // Add 2 days
         sessionSlotTime.setHours(9, 0, 0, 0); // Set to 9:00 AM
-        const prisonCode = "DHI"
-        const prisonerNumber = 'A8900DZ'
-        let status = await createSessionTemplate({ request }, sessionSlotTime, prisonCode, 1, 0, 1, null, "ENHANCED", "FEMALE_CLOSED", false, "Automation Tests")
+        let status = await createSessionTemplate({ request }, sessionSlotTime, Constants.PRISON_TWO_CODE, 1, 0, 1, null, "ENHANCED", "FEMALE_CLOSED", false, "Automation Tests")
         expect(status).toBe(201)
         console.log(sessionSlotTime)
 
         // Perform search and prisoner details validation     
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
-        await searchPage.enterPrisonerNumber(prisonerNumber)
+        await searchPage.enterPrisonerNumber(Constants.PRISONER_THREE)
         await searchPage.selectPrisonerformResults()
         const prisonerCat = await prisonerDetailsPage.getPrisonerCategory()
         const prinsonerIncentive = await prisonerDetailsPage.getPrisonerIncentive()
@@ -244,4 +241,3 @@ test.describe('Staff should be able to book slots for various incentives', () =>
     GlobalData.clear()
     console.log('Global data cache cleared.')
 })
-

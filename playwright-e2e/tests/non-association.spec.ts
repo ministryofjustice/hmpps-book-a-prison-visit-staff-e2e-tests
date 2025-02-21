@@ -1,4 +1,5 @@
 import { test, expect } from '../fixtures/PageFixtures'
+import Constants from '../setup/Constants'
 import GlobalData from '../setup/GlobalData'
 import { clearVisits, getAccessToken } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
@@ -49,7 +50,7 @@ test.describe('Staff should not be able to book visits for non-assocaition priso
         await homePage.selectBookOrChangeVisit()
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
 
-        await searchPage.enterPrisonerNumber('A6038DZ')
+        await searchPage.enterPrisonerNumber(Constants.PRISONER_FIVE)
         await searchPage.selectPrisonerformResults()
 
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
@@ -102,7 +103,7 @@ test.describe('Staff should not be able to book visits for non-assocaition priso
         await bookingConfirmationPage.clickOnManagePrisonVisits()
         await homePage.checkOnPage('Manage prison visits - DPS')
         await homePage.selectBookOrChangeVisit()
-        await searchPage.enterPrisonerNumber('A6541DZ')
+        await searchPage.enterPrisonerNumber(Constants.PRISONER_SIX)
         await searchPage.selectPrisonerformResults()
 
         await prisonerDetailsPage.clickOnBookAPrisonVisit()

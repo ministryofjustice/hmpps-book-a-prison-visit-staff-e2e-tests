@@ -1,4 +1,5 @@
 import { test, expect } from '../fixtures/PageFixtures'
+import Constants from '../setup/Constants'
 import GlobalData from '../setup/GlobalData'
 import { createSessionTemplate, getAccessToken, deleteVisit, getSlotDataTestValue } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
@@ -38,13 +39,12 @@ test.describe('Staff should be able to book slots for various categories', () =>
         const sessionSlotTime = new Date();
         sessionSlotTime.setDate(sessionSlotTime.getDate() + 2); // Add 2 days
         sessionSlotTime.setHours(9, 0, 0, 0); // Set to 9:00 AM
-        const prisonCode = "DHI"
-        let status = await createSessionTemplate({ request }, sessionSlotTime, prisonCode, 1, 0, 1, null, null, "FEMALE_CLOSED", false, "Automation Tests")
+        let status = await createSessionTemplate({ request }, sessionSlotTime, Constants.PRISON_TWO_CODE, 1, 0, 1, null, null, "FEMALE_CLOSED", false, "Automation Tests")
         expect(status).toBe(201)
 
         // Search for a prisoner 
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
-        await searchPage.enterPrisonerNumber('A8900DZ')
+        await searchPage.enterPrisonerNumber(Constants.PRISONER_THREE)
         await searchPage.selectPrisonerformResults()
 
         const prisonerCat = await prisonerDetailsPage.getPrisonerCategory()
@@ -115,13 +115,12 @@ test.describe('Staff should be able to book slots for various categories', () =>
         const sessionSlotTime = new Date();
         sessionSlotTime.setDate(sessionSlotTime.getDate() + 2); // Add 2 days
         sessionSlotTime.setHours(9, 0, 0, 0); // Set to 9:00 AM
-        const prisonCode = "DHI"
-        let status = await createSessionTemplate({ request }, sessionSlotTime, prisonCode, 1, 0, 1, null, null, 'A_HIGH', false, "Automation Tests")
+        let status = await createSessionTemplate({ request }, sessionSlotTime, Constants.PRISON_TWO_CODE, 1, 0, 1, null, null, 'A_HIGH', false, "Automation Tests")
         expect(status).toBe(201)
 
         // Search for a prisoner 
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
-        await searchPage.enterPrisonerNumber('A8900DZ')
+        await searchPage.enterPrisonerNumber(Constants.PRISONER_THREE)
         await searchPage.selectPrisonerformResults()
         const prisonerCat = await prisonerDetailsPage.getPrisonerCategory()
         expect(prisonerCat).toContain('Fem Closed')

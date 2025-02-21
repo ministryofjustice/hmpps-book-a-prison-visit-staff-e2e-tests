@@ -1,4 +1,5 @@
 import { test, expect } from '../fixtures/PageFixtures'
+import Constants from '../setup/Constants'
 import GlobalData from '../setup/GlobalData'
 import { deleteVisit, getAccessToken } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
@@ -65,7 +66,7 @@ test.describe('Error message validations', () => {
             await homePage.checkOnPage('Manage prison visits - DPS')
             await homePage.selectBookOrChangeVisit()
             await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
-            await searchPage.enterPrisonerNumber('A8899DZ')
+            await searchPage.enterPrisonerNumber(Constants.PRISONER_FOUR)
             await searchPage.selectPrisonerformResults()
             await prisonerDetailsPage.clickOnBookAPrisonVisit()
         })
@@ -102,7 +103,7 @@ test.describe('Error message validations', () => {
             await homePage.checkOnPage('Manage prison visits - DPS')
             await homePage.selectBookOrChangeVisit()
             await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
-            await searchPage.enterPrisonerNumber('A6036DZ')
+            await searchPage.enterPrisonerNumber(Constants.PRISONER_TWO)
             await searchPage.selectPrisonerformResults()
             await prisonerDetailsPage.clickOnBookAPrisonVisit()
         })
