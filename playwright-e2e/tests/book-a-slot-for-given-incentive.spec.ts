@@ -48,7 +48,7 @@ test.describe('Staff should be able to book slots for various incentives', () =>
         // Perform search and prisoner details validation    
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
         await searchPage.enterPrisonerNumber(prisonerNumber)
-        await searchPage.selectPrisonerformResults()
+        await searchPage.selectPrisonerfromResults()
         const prisonerCat = await prisonerDetailsPage.getPrisonerCategory()
         const prinsonerIncentive = await prisonerDetailsPage.getPrisonerIncentive()
         expect(prinsonerIncentive).toContain('Standard')
@@ -128,7 +128,7 @@ test.describe('Staff should be able to book slots for various incentives', () =>
         // Perform search and prisoner details validation        
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
         await searchPage.enterPrisonerNumber(Constants.PRISONER_THREE)
-        await searchPage.selectPrisonerformResults()
+        await searchPage.selectPrisonerfromResults()
         const prisonerCat = await prisonerDetailsPage.getPrisonerCategory()
         const prinsonerIncentive = await prisonerDetailsPage.getPrisonerIncentive()
         expect(prinsonerIncentive).toContain('Standard')
@@ -203,7 +203,7 @@ test.describe('Staff should be able to book slots for various incentives', () =>
         // Perform search and prisoner details validation     
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
         await searchPage.enterPrisonerNumber(Constants.PRISONER_THREE)
-        await searchPage.selectPrisonerformResults()
+        await searchPage.selectPrisonerfromResults()
         const prisonerCat = await prisonerDetailsPage.getPrisonerCategory()
         const prinsonerIncentive = await prisonerDetailsPage.getPrisonerIncentive()
         expect(prinsonerIncentive).toContain('Standard')

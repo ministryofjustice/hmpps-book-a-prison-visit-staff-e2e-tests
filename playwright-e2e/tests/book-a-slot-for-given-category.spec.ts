@@ -45,7 +45,7 @@ test.describe('Staff should be able to book slots for various categories', () =>
         // Search for a prisoner 
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
         await searchPage.enterPrisonerNumber(Constants.PRISONER_THREE)
-        await searchPage.selectPrisonerformResults()
+        await searchPage.selectPrisonerfromResults()
 
         const prisonerCat = await prisonerDetailsPage.getPrisonerCategory()
         expect(prisonerCat).toContain('Fem Closed')
@@ -121,7 +121,7 @@ test.describe('Staff should be able to book slots for various categories', () =>
         // Search for a prisoner 
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
         await searchPage.enterPrisonerNumber(Constants.PRISONER_THREE)
-        await searchPage.selectPrisonerformResults()
+        await searchPage.selectPrisonerfromResults()
         const prisonerCat = await prisonerDetailsPage.getPrisonerCategory()
         expect(prisonerCat).toContain('Fem Closed')
         await prisonerDetailsPage.clickOnBookAPrisonVisit()

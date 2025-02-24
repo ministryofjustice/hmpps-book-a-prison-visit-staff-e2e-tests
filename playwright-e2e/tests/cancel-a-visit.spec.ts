@@ -39,7 +39,7 @@ test.describe('Staff should be able to book a visit using VSIP service', () => {
 
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
         await searchPage.enterPrisonerNumber(Constants.PRISONER_TWO)
-        await searchPage.selectPrisonerformResults()
+        await searchPage.selectPrisonerfromResults()
 
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
@@ -83,7 +83,7 @@ test.describe('Staff should be able to book a visit using VSIP service', () => {
         await bookingConfirmationPage.clickOnCancelBookingLink()
         await homePage.selectBookOrChangeVisit()
         await searchPage.enterPrisonerNumber('A6036DZ')
-        await searchPage.selectPrisonerformResults()
+        await searchPage.selectPrisonerfromResults()
         await prisonerDetailsPage.clickOnVisitRefRerenceNumber()
         await bookingDetailsPage.headerOnPage('Visit booking details')
         await bookingDetailsPage.clickOnCancelBookingButton()

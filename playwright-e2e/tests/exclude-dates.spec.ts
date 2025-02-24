@@ -53,7 +53,7 @@ test.describe('Staff should be able to view dates that have been excluded and am
 
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
         await searchPage.enterPrisonerNumber(Constants.PRISONER_TWO)
-        await searchPage.selectPrisonerformResults()
+        await searchPage.selectPrisonerfromResults()
 
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 

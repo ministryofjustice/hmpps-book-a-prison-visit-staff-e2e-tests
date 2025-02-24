@@ -51,7 +51,7 @@ test.describe('Staff should not be able to book visits for non-assocaition priso
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
 
         await searchPage.enterPrisonerNumber(Constants.PRISONER_FIVE)
-        await searchPage.selectPrisonerformResults()
+        await searchPage.selectPrisonerfromResults()
 
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
@@ -104,7 +104,7 @@ test.describe('Staff should not be able to book visits for non-assocaition priso
         await homePage.checkOnPage('Manage prison visits - DPS')
         await homePage.selectBookOrChangeVisit()
         await searchPage.enterPrisonerNumber(Constants.PRISONER_SIX)
-        await searchPage.selectPrisonerformResults()
+        await searchPage.selectPrisonerfromResults()
 
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
