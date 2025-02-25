@@ -67,7 +67,7 @@ test.describe('Error message validations', () => {
             await homePage.selectBookOrChangeVisit()
             await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
             await searchPage.enterPrisonerNumber(Constants.PRISONER_FOUR)
-            await searchPage.selectPrisonerformResults()
+            await searchPage.selectPrisonerfromResults()
             await prisonerDetailsPage.clickOnBookAPrisonVisit()
         })
 
@@ -104,7 +104,7 @@ test.describe('Error message validations', () => {
             await homePage.selectBookOrChangeVisit()
             await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
             await searchPage.enterPrisonerNumber(Constants.PRISONER_TWO)
-            await searchPage.selectPrisonerformResults()
+            await searchPage.selectPrisonerfromResults()
             await prisonerDetailsPage.clickOnBookAPrisonVisit()
         })
 

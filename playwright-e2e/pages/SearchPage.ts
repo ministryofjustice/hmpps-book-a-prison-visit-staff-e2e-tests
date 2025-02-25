@@ -27,7 +27,7 @@ export default class SearchPage extends BasePage {
         await this.searchButton.last().click()
     }
 
-    async selectPrisonerformResults(): Promise<void> {
+    async selectPrisonerfromResults(): Promise<void> {
         await this.firstPrisonerReturned.click()
     }
 

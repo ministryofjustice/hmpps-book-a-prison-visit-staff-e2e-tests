@@ -49,7 +49,7 @@ test.describe('Staff should be able to book slots for various locations within t
         // Perform search and prisoner details validation    
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
         await searchPage.enterPrisonerNumber(Constants.PRISONER_FOUR)
-        await searchPage.selectPrisonerformResults()
+        await searchPage.selectPrisonerfromResults()
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
         // Select visitors and book a slot    
@@ -128,7 +128,7 @@ test.describe('Staff should be able to book slots for various locations within t
         // Perform search and prisoner details validation        
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
         await searchPage.enterPrisonerNumber(Constants.PRISONER_FOUR)
-        await searchPage.selectPrisonerformResults()
+        await searchPage.selectPrisonerfromResults()
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
         // Select visitors and book a slot   
@@ -204,7 +204,7 @@ test.describe('Staff should be able to book slots for various locations within t
         // Perform search and prisoner details validation     
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
         await searchPage.enterPrisonerNumber(Constants.PRISONER_FOUR)
-        await searchPage.selectPrisonerformResults()
+        await searchPage.selectPrisonerfromResults()
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
         // Select visitors and book a slot   

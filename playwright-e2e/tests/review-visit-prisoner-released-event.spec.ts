@@ -40,7 +40,7 @@ test.describe('A visit is marked for review when prisoners are released after th
 
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
         await searchPage.enterPrisonerNumber(Constants.PRISONER_ONE)
-        await searchPage.selectPrisonerformResults()
+        await searchPage.selectPrisonerfromResults()
 
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 

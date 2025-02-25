@@ -11,6 +11,7 @@ export abstract class BasePage {
     private readonly yourAccountLink: Locator
     private readonly signOutLink: Locator
     private readonly submitButton : Locator
+    private readonly backToHomeBtn : Locator
 
     constructor(page: Page) {
         this.page = page
@@ -21,6 +22,7 @@ export abstract class BasePage {
         this.signOutLink = page.getByRole('link', { name: 'Sign out' })
         this.yourAccountLink = page.getByRole('link', { name: 'Your account' })
         this.submitButton = page.getByRole('button', { name: 'Submit' })
+        this.backToHomeBtn = page.getByRole('button', {name: 'Go to manage prison visits'})
     }
 
     private async waitForPageToLoad(): Promise<void> {
@@ -55,5 +57,9 @@ export abstract class BasePage {
         const isVisible = await this.page.locator(`text=${textToVerify}`).isVisible()
         // Return whether the text is visible
         return isVisible;
+    }
+
+    async clickOnBackToHomeBtn(): Promise<void> {
+        await this.backToHomeBtn.click()
     }
 }
