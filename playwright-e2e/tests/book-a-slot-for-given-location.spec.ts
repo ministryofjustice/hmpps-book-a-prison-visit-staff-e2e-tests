@@ -1,6 +1,7 @@
 import { test, expect } from '../fixtures/PageFixtures'
 import Constants from '../setup/Constants'
 import GlobalData from '../setup/GlobalData'
+import { teardownTestData } from '../support/commonMethods'
 import { createSessionTemplate, getAccessToken, deleteVisit, } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
 
@@ -222,21 +223,8 @@ test.describe('Staff should be able to book slots for various locations within t
         await selectDateTimePage.signOut()
     })
 
-    // Teardown after each test
-    test.afterEach('Teardown test data', async ({ request }) => {
-        let visitRef = GlobalData.getAll('visitReference')
-        for (const visitId of visitRef) {
-
-            try {
-                await deleteVisit({ request }, visitId)
-            } catch (error) {
-                console.debug('Failed to delete visit the ID ${visitId}:', error)
-            }
-        }
-    })
-
-    // Clear global data cache
-    GlobalData.clear()
-    console.log('Global data cache cleared.')
+        test.afterAll('Teardown test data', async ({ request }) => {
+            await teardownTestData(request);
+        })
 })
 

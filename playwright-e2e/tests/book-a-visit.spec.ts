@@ -1,7 +1,8 @@
 import { test, expect } from '../fixtures/PageFixtures'
 import Constants from '../setup/Constants'
 import GlobalData from '../setup/GlobalData'
-import { deleteVisit, getAccessToken } from '../support/testingHelperClient'
+import { teardownTestData } from '../support/commonMethods'
+import { getAccessToken } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
 
 test.beforeAll('Get access token and store so it is available as global data', async ({ request }, testInfo) => {
@@ -86,15 +87,6 @@ test.describe('Staff should be able to book a visit using VSIP service', () => {
     })
 
     test.afterAll('Teardown test data', async ({ request }) => {
-        try {
-            let visitRef = GlobalData.getAll('visitReference')
-            for (const visitId of visitRef) {
-                await deleteVisit({ request }, visitId)
-            }
-        } finally {
-            // Clear global data cache
-            GlobalData.clear()
-            console.log('Global data cache cleared.')
-        }
+        await teardownTestData(request);
     })
 })

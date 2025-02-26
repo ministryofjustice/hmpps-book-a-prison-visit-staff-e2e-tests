@@ -1,6 +1,7 @@
 import { test, expect } from '../fixtures/PageFixtures'
 import Constants from '../setup/Constants'
 import GlobalData from '../setup/GlobalData'
+import { teardownTestData } from '../support/commonMethods'
 import { clearVisits, getAccessToken } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
 
@@ -121,16 +122,6 @@ test.describe('Staff should not be able to book visits for non-assocaition priso
     })
 
     test.afterAll('Teardown test data', async ({ request }) => {
-        const prisonerNumRefs = GlobalData.getAll('prisonerNum')
-        for (const priNum of prisonerNumRefs) {
-            try {
-                await clearVisits({ request }, priNum)
-            } catch (error) {
-                console.error(`Failed to clear visits for prisoner number: ${priNum}`, error)
-            }
-        }
-        // Clear global data cache
-        GlobalData.clear()
-        console.log('Global data cache cleared.')
+        await teardownTestData(request);
     })
 })

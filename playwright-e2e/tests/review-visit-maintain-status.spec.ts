@@ -1,7 +1,7 @@
 import { test, expect } from '../fixtures/PageFixtures'
 import GlobalData from '../setup/GlobalData'
-import { loginAndNavigate } from '../support/commonMethods'
-import { deleteVisit, getAccessToken, releasePrisoner } from '../support/testingHelperClient'
+import { loginAndNavigate, teardownTestData } from '../support/commonMethods'
+import { getAccessToken, releasePrisoner } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
 import Constants from '../setup/Constants'
 test.beforeAll('Get access token and store so it is available as global data', async ({ request }, testInfo) => {
@@ -12,7 +12,7 @@ test.beforeAll('Get access token and store so it is available as global data', a
 test.describe('A visit is flagged for review when a prisoner is released after booking, allowing staff to take multiple actions', () => {
 
     test.beforeEach(async ({ page }) => {
-        await loginAndNavigate(page,UserType.USER_TWO)
+        await loginAndNavigate(page, UserType.USER_TWO)
     })
 
     test('Do not modify a review, display an error if no reason is provided, and allow updates.', async ({
@@ -35,7 +35,7 @@ test.describe('A visit is flagged for review when a prisoner is released after b
 
     }) => {
         test.slow()
-       
+
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
         await searchPage.enterPrisonerNumber(Constants.PRISONER_ONE)
         await searchPage.selectPrisonerfromResults()
@@ -95,7 +95,7 @@ test.describe('A visit is flagged for review when a prisoner is released after b
         await needReviewPage.clickViewReasonLink()
         expect(await bookingDetailsPage.notificationOnPage('This booking should be cancelled as the prisoner has been released.'))
         await bookingDetailsPage.clickOnDoNotChangeButton()
-        
+
         expect(await clearNotificationPage.headerOnPage('Are you sure the visit does not need to be updated or cancelled?'))
         await clearNotificationPage.confirmDoNotChange()
         await clearNotificationPage.continueToNextPage()
@@ -109,16 +109,7 @@ test.describe('A visit is flagged for review when a prisoner is released after b
     })
 
     test.afterAll('Teardown test data', async ({ request }) => {
-        try {
-            let visitRef = GlobalData.getAll('visitReference')
-            for (const visitId of visitRef) {
-                await deleteVisit({ request }, visitId)
-            }
-        } finally {
-            // Clear global data cache
-            GlobalData.clear()
-            console.log('Global data cache cleared.')
-        }
+        await teardownTestData(request);
     })
 
 })

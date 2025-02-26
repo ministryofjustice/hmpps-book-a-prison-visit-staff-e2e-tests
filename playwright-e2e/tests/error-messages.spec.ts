@@ -1,7 +1,8 @@
 import { test, expect } from '../fixtures/PageFixtures'
 import Constants from '../setup/Constants'
 import GlobalData from '../setup/GlobalData'
-import { deleteVisit, getAccessToken } from '../support/testingHelperClient'
+import { teardownTestData } from '../support/commonMethods'
+import { getAccessToken } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
 
 test.beforeAll('Setup global data and access token', async ({ request }, testInfo) => {
@@ -139,16 +140,6 @@ test.describe('Error message validations', () => {
     })
 
     test.afterAll('Teardown test data', async ({ request }) => {
-        const visitRefs = GlobalData.getAll('visitReference')
-        for (const visitId of visitRefs) {
-            try {
-                await deleteVisit({ request }, visitId);
-                console.log(`Visit with reference ${visitId} deleted.`)
-            } catch (error) {
-                console.error(`Failed to delete visit with reference ${visitId}:`, error)
-            }
-        }
-        GlobalData.clear()
-        console.log('Global data cache cleared.')
+        await teardownTestData(request);
     })
 })

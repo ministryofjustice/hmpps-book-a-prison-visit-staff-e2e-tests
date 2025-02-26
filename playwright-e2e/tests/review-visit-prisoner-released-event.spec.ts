@@ -1,8 +1,6 @@
 import { test, expect } from '../fixtures/PageFixtures'
-import loginPage from '../pages/LoginPage'
-import homePage from '../pages/HomePage'
 import GlobalData from '../setup/GlobalData'
-import { loginAndNavigate } from '../support/commonMethods'
+import { loginAndNavigate, teardownTestData } from '../support/commonMethods'
 import { deleteVisit, getAccessToken, releasePrisoner } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
 import Constants from '../setup/Constants'
@@ -102,17 +100,8 @@ test.describe('A visit is marked for review when prisoners are released after th
         console.log('Confirmation message:', visitReference)
 
     })
-
     test.afterAll('Teardown test data', async ({ request }) => {
-        try {
-            let visitRef = GlobalData.getAll('visitReference')
-            for (const visitId of visitRef) {
-                await deleteVisit({ request }, visitId)
-            }
-        } finally {
-            // Clear global data cache
-            GlobalData.clear()
-            console.log('Global data cache cleared.')
-        }
+        await teardownTestData(request);
     })
+
 })
