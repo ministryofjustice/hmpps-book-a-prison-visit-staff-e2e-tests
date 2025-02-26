@@ -1,7 +1,8 @@
 import { test, expect } from '../fixtures/PageFixtures'
 import Constants from '../setup/Constants'
 import GlobalData from '../setup/GlobalData'
-import { createSessionTemplate, getAccessToken, deleteVisit, getSlotDataTestValue } from '../support/testingHelperClient'
+import { loginAndNavigate, teardownTestData } from '../support/commonMethods'
+import { createSessionTemplate, getAccessToken } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
 
 test.beforeAll('Get access token and store so it is available as global data', async ({ request }, testInfo) => {
@@ -11,14 +12,8 @@ test.beforeAll('Get access token and store so it is available as global data', a
 
 test.describe('Staff should be able to book slots for various categories', () => {
 
-    test.beforeEach(async ({ loginPage, homePage }) => {
-        // Common steps for all tests
-        await loginPage.navigateTo('/')
-        await loginPage.checkOnPage('HMPPS Digital Services - Sign in')
-        await loginPage.signInWith(UserType.USER_FOUR)
-        await homePage.displayBookOrChangeaVisit()
-        await homePage.checkOnPage('Manage prison visits - DPS')
-        await homePage.selectBookOrChangeVisit()
+    test.beforeEach(async ({ page }) => {
+        await loginAndNavigate(page, UserType.USER_FOUR)
     })
 
     test("Book an open slot that matches prisoner's category", async ({
@@ -143,17 +138,6 @@ test.describe('Staff should be able to book slots for various categories', () =>
 
     // Teardown after tests
     test.afterAll('Teardown test data', async ({ request }) => {
-        let visitRef = GlobalData.getAll('visitReference')
-        for (const visitId of visitRef) {
-            try {
-                await deleteVisit({ request }, visitId)
-            } catch (error) {
-                console.error('Failed to delte visit the ID ${visitID}:', error)
-            }
-        }
+        await teardownTestData(request);
     })
-
-    // Clear global data cache
-    GlobalData.clear()
-    console.log('Global data cache cleared.')
 })

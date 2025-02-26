@@ -1,6 +1,7 @@
 import { test, expect } from '../fixtures/PageFixtures'
 import Constants from '../setup/Constants'
 import GlobalData from '../setup/GlobalData'
+import { teardownTestData } from '../support/commonMethods'
 import { deleteVisit, getAccessToken } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
 import { parse, parseISO, format } from 'date-fns'
@@ -110,12 +111,6 @@ test.describe('Staff should be able to view visits by date', () => {
     })
 
     test.afterAll('Teardown test data', async ({ request }) => {
-        let visitRef = GlobalData.getAll('visitReference')
-        for (const visitId of visitRef) {
-            await deleteVisit({ request }, visitId)
-        }
-        // Clear global data cache
-        GlobalData.clear()
-        console.log('Global data cache cleared.')
+        await teardownTestData(request);
     })
 })
