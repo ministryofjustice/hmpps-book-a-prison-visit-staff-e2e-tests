@@ -7,13 +7,14 @@ export default class SelectDateTimePage extends BasePage {
     private readonly availableSlot: Locator
     private readonly showAllSlots: Locator
     private readonly displayedSlot: Locator
+    private readonly visitRestrictionType: Locator
     constructor(page: Page) {
         super(page)
         this.availableSlot = page.locator('input[type="radio"]')
         this.showAllSlots = page.getByRole('button', { name: 'Show all sections' })
         this.displayedSlot = page.locator('label')
-
         this.contextStorage = new Map()
+        this.visitRestrictionType = page.locator('[data-test^=visit-restriction]')
     }
 
     // Set a value in the context
@@ -87,5 +88,9 @@ export default class SelectDateTimePage extends BasePage {
         await this.showAllSlots.first().click()
         const textContent = await this.displayedSlot.allTextContents()
         return textContent.length > 0 ? textContent[0].trim() : ''
+    }
+
+    async getSessionCategory(): Promise<string> {
+        return await this.visitRestrictionType.innerText()
     }
 }

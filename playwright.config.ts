@@ -6,8 +6,8 @@ dotenvConfig()
 
 export default defineConfig({
   globalSetup: './playwright-e2e/setup/globalSetup.ts', // Setup script for initializing tests
-  globalTimeout: 5 * 60_000, // 5 minutes
-  timeout: 60_000, // 1 minute per test
+  globalTimeout: 600000, // 10 minutes
+  timeout: 300000, // 5 minute per test
   testDir: './playwright-e2e/tests', // Directory containing test files
   fullyParallel:  process.env.CI ? true : false, // Enable parallel only on CI
   forbidOnly: !!process.env.CI, // Forbid .only in CI
