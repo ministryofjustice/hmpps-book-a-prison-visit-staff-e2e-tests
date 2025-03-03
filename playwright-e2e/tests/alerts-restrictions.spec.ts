@@ -1,8 +1,9 @@
+import { vi } from 'date-fns/locale'
 import { test, expect } from '../fixtures/PageFixtures'
 import Constants from '../setup/Constants'
 import GlobalData from '../setup/GlobalData'
 import { teardownTestData } from '../support/commonMethods'
-import { excludeDate, getAccessToken, removeExcludeDate } from '../support/testingHelperClient'
+import { getAccessToken } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
 
 test.beforeAll('Get access token and store so it is available as global data', async ({ request }, testInfo) => {
@@ -10,7 +11,7 @@ test.beforeAll('Get access token and store so it is available as global data', a
     GlobalData.set('deviceName', testInfo.project.name)
 })
 
-test.describe('Staff should be able to view dates that have been excluded and amend reviews as required', () => {
+test.describe('Display alerts and restrictions to a given prisnoer', () => {
 
     test.beforeEach(async ({ loginPage, homePage }) => {
         await loginPage.navigateTo('/')
@@ -18,22 +19,10 @@ test.describe('Staff should be able to view dates that have been excluded and am
         await loginPage.signInWith(UserType.USER_THREE)
         await homePage.displayBookOrChangeaVisit()
         await homePage.checkOnPage('Manage prison visits - DPS')
-        await homePage.clickOnChangeEstablishment()
-        await homePage.selectEstablishment('Hewell (HMP)')
-        await homePage.clickOnSubmitButton()
-        await homePage.clickOnManagePrisonVisits()
-        await homePage.displayBookOrChangeaVisit()
-        await homePage.checkOnPage('Manage prison visits - DPS')
-        await homePage.selectBookOrChangeVisit()
-
-        // Switching the URL to 'staging' because selecting 'Change Establishment' sets the environment to 'Dev',
-        // and DSP does not have a 'Staging' environment.
-
-        await homePage.navigateTo('/')
         await homePage.selectBookOrChangeVisit()
     })
 
-    test.skip('Exclude the booking date once booked and review the reason for the notification.', async ({
+    test('Display alerts and restrictions on the select visitor page', async ({
 
         searchPage,
         prisonerDetailsPage,
@@ -44,20 +33,18 @@ test.describe('Staff should be able to view dates that have been excluded and am
         bookingMethodPage,
         checkYourBookingPage,
         bookingConfirmationPage,
-        request,
-        needReviewPage,
         homePage,
-        bookingDetailsPage
+        visitDetailsPage
 
     }) => {
         test.slow()
 
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
-        await searchPage.enterPrisonerNumber(Constants.PRISONER_TWO)
+        await searchPage.enterPrisonerNumber(Constants.PRISONER_WITH_ALERTS)
         await searchPage.selectPrisonerfromResults()
-
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
-
+        expect(await selectorVisitorPage.checkOnPage('Select visitors - Manage prison visits - DPS'))
+        expect(await selectorVisitorPage.displayAlert('Domestic Violence Perpetrator'))
         expect(await selectorVisitorPage.checkOnPage('Select visitors - Manage prison visits - DPS'))
         await selectorVisitorPage.selectFirstVisitor()
         await selectorVisitorPage.continueToNextPage()
@@ -94,29 +81,21 @@ test.describe('Staff should be able to view dates that have been excluded and am
         expect(await bookingConfirmationPage.headerOnPage('Booking confirmed'))
         expect(await bookingConfirmationPage.displayBookingConfirmation()).toBeTruthy()
         const visitReference = await bookingConfirmationPage.getReferenceNumber()
-        const visitDate = await bookingConfirmationPage.getVisitBookedForDate()
-        const dateToExclude = new Date(visitDate)
-
-        // Add Exclude date event
-        const status = await excludeDate({ request }, Constants.PRISON_ONE_CODE, dateToExclude)
-        expect(status).toBe(201)
-
-        await bookingConfirmationPage.clickOnManagePrisonVisits()
-        await homePage.clickNeedReview()
-        await needReviewPage.clickNeedReviewList()
-        expect(await needReviewPage.reviewResonsListIsVisible()).toBe(true)
-        await needReviewPage.clickViewReasonLink()
-        expect(await bookingDetailsPage.notificationOnPage('A new visit time should be selected as the date is no longer available for social visits.'))
-        await bookingConfirmationPage.signOut()
-
-        // Remove Exclude date event
-
-        const removeExludeDatestatus = await removeExcludeDate({ request }, Constants.PRISON_ONE_CODE, dateToExclude)
-        expect(removeExludeDatestatus).toBe(201)
+        await bookingConfirmationPage.clickOnBackToHomeBtn()
+        await homePage.selectBookOrChangeVisit()
+        await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
+        await searchPage.clickOnSearchByBookingRef()
+        const parts = visitReference.split('-')
+        const part1 = parts[0]
+        const part2 = parts[1]
+        const part3 = parts[2]
+        const part4 = parts[3]
+        await searchPage.searchWithRefNumber(part1, part2, part3, part4)
+        await searchPage.selectPrisonerfromResults()
+        expect(await visitDetailsPage.displayAlert('Domestic Violence Perpetrator'))
 
         GlobalData.set('visitReference', visitReference)
-        console.debug('Confirmation message:', visitReference)
-        console.debug("Visit Date is:", visitDate)
+        console.log('Confirmation message:', visitReference)
 
     })
 
