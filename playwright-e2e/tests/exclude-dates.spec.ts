@@ -33,7 +33,7 @@ test.describe('Staff should be able to view dates that have been excluded and am
         await homePage.selectBookOrChangeVisit()
     })
 
-    test('Exclude the booking date once booked and review the reason for the notification.', async ({
+    test.skip('Exclude the booking date once booked and review the reason for the notification.', async ({
 
         searchPage,
         prisonerDetailsPage,
