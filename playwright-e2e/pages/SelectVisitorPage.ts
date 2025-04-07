@@ -5,12 +5,14 @@ export default class SelectVisitorPage extends BasePage {
     private readonly visitorCheckboxes: Locator
     private readonly NoSuitableVisitorsMessage: Locator
     private readonly bannedVisitor: Locator
+    private readonly alertType: Locator
 
     constructor(page: Page) {
         super(page)
         this.visitorCheckboxes = page.locator('input[type="checkbox"]')
         this.NoSuitableVisitorsMessage = page.locator('[data-test="no-suitable-visitors"]')
         this.bannedVisitor = page.locator('.govuk-visually-hidden')
+        this.alertType = page.locator('[data-test="alert-type1"]')
     }
 
     async selectFirstVisitor(): Promise<void> {
@@ -29,6 +31,11 @@ export default class SelectVisitorPage extends BasePage {
         const checkbox = name.locator('input[type="checkbox"]')
         await expect(name).toHaveText(bannedVisitorName)
         await expect(checkbox).toBeHidden()
+    }
+
+    async displayAlert(alertText: string): Promise<void> {
+        const alertStg = this.alertType
+        expect(alertStg).toHaveText(alertText)
     }
 }
 

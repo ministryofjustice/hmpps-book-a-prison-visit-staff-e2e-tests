@@ -17,6 +17,7 @@ import VisitTypePage from '../pages/VisitTypePage'
 import BlockVisitDatePage from '../pages/BlockVisitDatePage'
 import NeedReviewPage from '../pages/NeedReviewPage'
 import ClearNotificationPage from '../pages/ClearNotificationPage'
+import VisitDetialsPage from '../pages/VisitDetailsPage'
 
 type PageFixtures = {
     loginPage: LoginPage
@@ -37,6 +38,7 @@ type PageFixtures = {
     blockVisitDatePage: BlockVisitDatePage
     needReviewPage: NeedReviewPage
     clearNotificationPage: ClearNotificationPage
+    visitDetailsPage: VisitDetialsPage
 
 }
 
@@ -110,6 +112,10 @@ const test = baseTest.extend<PageFixtures>({
 
     clearNotificationPage: async({page}, use) => {
         await use(new ClearNotificationPage(page))
+    },
+
+    visitDetailsPage: async({page}, use) => {
+        await use(new VisitDetialsPage(page))
     }
 
 })
