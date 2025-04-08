@@ -19,7 +19,9 @@ export default class Constants {
     static readonly PRISONER_SIX = "A6541DZ"
     static readonly PRISONER_WITH_NO_ADULT_VISITORS = "A6445DZ"
     static readonly PRISONER_WITH_BANNED_VISITORS = "A8416DZ"
-    static readonly PRISONER_WITH_OPEN_SESSIONS ="A8897DZ"
-     static readonly PRISONER_WITH_CLOSED_SESSIONS ="A8899DZ"
+    static readonly PRISONER_WITH_OPEN_SESSIONS = "A8897DZ"
+    static readonly PRISONER_WITH_CLOSED_SESSIONS = "A8899DZ"
+    static readonly PRISONER_WITH_ALERTS = "G1716GI"
+
 }
 
