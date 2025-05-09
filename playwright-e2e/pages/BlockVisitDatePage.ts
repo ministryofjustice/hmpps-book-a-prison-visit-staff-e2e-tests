@@ -16,7 +16,7 @@ export default class BlockVisitDatePage extends BasePage {
         this.inputDate = page.locator('input[id$=date]')
         this.confirmYesRadio = page.getByLabel('yes')
         this.confirmNoRadio = page.getByLabel('No')
-        this.blockedDateStatusMesssage = page.locator('.moj-banner__message')
+        this.blockedDateStatusMesssage = page.locator('.moj-alert__content')
         this.dateBlockedError =page.locator('.govuk-error-summary__body')
         this.unblockDateLink = page.locator('[data-test="unblock-date-1"]')
     }
