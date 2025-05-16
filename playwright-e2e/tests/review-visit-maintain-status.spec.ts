@@ -93,7 +93,7 @@ test.describe('A visit is flagged for review when a prisoner is released after b
         await needReviewPage.clickNeedReviewList()
         expect(await needReviewPage.reviewResonsListIsVisible()).toBe(true)
         await needReviewPage.clickViewReasonLink()
-        expect(await bookingDetailsPage.notificationOnPage('This booking should be cancelled as the prisoner has been released.'))
+        expect(await bookingDetailsPage.notificationOnPage('The prisoner has been released This booking should be cancelled.'))
         await bookingDetailsPage.clickOnDoNotChangeButton()
 
         expect(await clearNotificationPage.headerOnPage('Are you sure the visit does not need to be updated or cancelled?'))
