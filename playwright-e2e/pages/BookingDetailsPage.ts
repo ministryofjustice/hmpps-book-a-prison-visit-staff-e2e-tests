@@ -9,7 +9,7 @@ export default class BookingDetailsPage extends BasePage {
     constructor(page: Page) {
         super(page)
         this.cancelVisitButton = page.locator('[data-test^=cancel-visit]')
-        this.visitNotificationMessage = page.locator('[data-test^=visit-notification]')
+        this.visitNotificationMessage = page.locator('.moj-alert__content')
         this.doNotChangeButton = page.locator('[data-test^=clear-notifications]')
     }
 

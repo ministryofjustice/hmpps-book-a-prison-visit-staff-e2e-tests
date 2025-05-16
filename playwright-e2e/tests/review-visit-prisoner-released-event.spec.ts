@@ -93,7 +93,7 @@ test.describe('A visit is marked for review when prisoners are released after th
         await needReviewPage.clickNeedReviewList()
         expect(await needReviewPage.reviewResonsListIsVisible()).toBe(true)
         await needReviewPage.clickViewReasonLink()
-        expect(await bookingDetailsPage.notificationOnPage('This booking should be cancelled as the prisoner has been released.'))
+        expect(await bookingDetailsPage.notificationOnPage('The prisoner has been released This booking should be cancelled.'))
         await bookingDetailsPage.signOut()
 
         GlobalData.set('visitReference', visitReference)
