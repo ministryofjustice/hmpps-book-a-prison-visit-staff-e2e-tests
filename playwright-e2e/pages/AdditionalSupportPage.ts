@@ -10,7 +10,7 @@ export default class AddtionalSupportPage extends BasePage {
         super(page)
         this.additionalSupportNotRequired = page.locator("#additionalSupportRequired-2")
         this.additionalSupportRequired = page.locator("#additionalSupportRequired")
-        this.additionalSupportDetails = page.locator('input[id$=additionalSupport]')
+        this.additionalSupportDetails = page.locator('textarea[id$=additionalSupport]')
     }
 
     async selectNoAdditionalSupportRequired(): Promise<void> {
