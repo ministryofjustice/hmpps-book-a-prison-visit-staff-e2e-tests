@@ -5,67 +5,68 @@ import ENV from './playwright-e2e/setup/env'
 dotenvConfig()
 
 export default defineConfig({
-  globalSetup: './playwright-e2e/setup/globalSetup.ts', // Setup script for initializing tests
-  globalTimeout: 600000, // 10 minutes
-  timeout: 300000, // 5 minute per test
-  testDir: './playwright-e2e/tests', // Directory containing test files
-  fullyParallel:  process.env.CI ? true : false, // Enable parallel only on CI
-  forbidOnly: !!process.env.CI, // Forbid .only in CI
-  retries: process.env.CI ? 1 : 0, // Retry failed tests once in CI
-  workers:  process.env.CI ? 1 : 1, // 4 workers on CI, 1 worker locally
+  globalSetup: './playwright-e2e/setup/globalSetup.ts',
+  globalTimeout: 600_000, // 10 minutes
+  timeout: 300_000, // 5 minutes per test
+  testDir: './playwright-e2e/tests',
+  fullyParallel: process.env.CI ? true : false,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 1 : 0,
+  workers: process.env.CI ? 1 : 1,
 
   reporter: process.env.CI
     ? [
-      ['html', { open: 'never' }], // HTML report for CI
-    ]
+        ['junit', { outputFile: 'results.xml' }],
+        ['html', { open: 'never' }],
+      ]
     : [
-      ['html', { open: 'never' }], // HTML report locally
-      ['allure-playwright', { detail: true, outputFolder: 'allure-results' }], // Allure for local use
-    ],
+        ['html', { open: 'never' }],
+        ['allure-playwright', { detail: true, outputFolder: 'allure-results' }],
+      ],
 
   use: {
-    baseURL: ENV.BASE_URL, // Base URL for application under test
-    navigationTimeout: 60_000, // Timeout for navigation actions
-    actionTimeout: 10_000, // Timeout for user actions (e.g., clicks)
-    testIdAttribute: 'data-test', // Custom attribute for locating elements
+    baseURL: ENV.BASE_URL,
+    navigationTimeout: 60_000,
+    actionTimeout: 10_000,
+    testIdAttribute: 'data-test',
 
-    trace: 'on-first-retry', // Generate trace on the first retry
-    screenshot: 'only-on-failure', // Capture screenshots only on failure
-    video:'retain-on-failure',  // Capture screenshots only on failure
+    trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
 
     launchOptions: {
-      args: ['--ignore-certificate-errors'], // Ignore SSL issues
-    }
+      args: ['--ignore-certificate-errors'],
+    },
   },
 
   projects: [
     {
-      name: 'setup', // Pre-test setup tasks
+      name: 'setup',
       testMatch: /.*\.setup\.ts/,
     },
     {
-      name: 'chromium', // Chromium tests
+      name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        viewport: { width: 1920, height: 1080 }, // Set viewport size
-        storageState: './playwright/.auth/auth.json', // Use pre-authenticated state
-      },
-      dependencies: ['setup'], // Depends on setup project
-    },
-    {
-      name: 'firefox', // Firefox tests
-      use: {
-        ...devices['Desktop Firefox'],
-        viewport: { width: 1920, height: 1080 }, // Set viewport size
+        viewport: { width: 1920, height: 1080 },
         storageState: './playwright/.auth/auth.json',
       },
-      dependencies: ['setup']
+      dependencies: ['setup'],
     },
     {
-      name: 'webkit', // Safari tests
+      name: 'firefox',
+      use: {
+        ...devices['Desktop Firefox'],
+        viewport: { width: 1920, height: 1080 },
+        storageState: './playwright/.auth/auth.json',
+      },
+      dependencies: ['setup'],
+    },
+    {
+      name: 'webkit',
       use: {
         ...devices['Desktop Safari'],
-        viewport: { width: 1920, height: 1080 }, // Set viewport size
+        viewport: { width: 1920, height: 1080 },
         storageState: './playwright/.auth/auth.json',
       },
       dependencies: ['setup'],

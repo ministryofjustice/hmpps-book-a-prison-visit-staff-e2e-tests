@@ -11,13 +11,19 @@
     "test:chrome:headed": "playwright test --project=chromium --headed",
     "test:safari:headed": "playwright test --project=webkit --headed",
     "test:firefox:headed": "playwright test --project=firefox --headed",
-    "test:webkit:headed": "playwright test --project=webkit--headed",
+    "test:webkit:headed": "playwright test --project=webkit --headed",
     "generate:report": "npx allure generate allure-results --clean",
     "open:report": "npx allure open allure-report",
     "posttest": "npm run generate:report && npm run open:report",
-    "test": "npm run test:chrome || npm run posttest",
+    "test": "npm run test:chrome && npm run posttest",
     "posttest:ci": "rimraf playwright",
-    "test:ci": "cross-env test_env=staging npm run test:chrome"
+    "test:ci": "cross-env test_env=staging npm run test:chrome",
+    "lint": "eslint . --ext .ts,.js",
+    "format": "prettier --write ."
+  },
+  "engines": {
+    "node": "^22",
+    "npm": "^10"
   },
   "devDependencies": {
     "@eslint/compat": "^1.1.1",
