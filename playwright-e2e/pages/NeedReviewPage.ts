@@ -5,14 +5,14 @@ export default class NeedReviewPage extends BasePage {
 
     private readonly checkListLink: Locator
     private readonly reviewReasonsList: Locator
-    private readonly viewReasonLink :Locator
+    private readonly viewReasonLink: Locator
 
     constructor(page: Page) {
         super(page)
 
         this.checkListLink = page.locator('.govuk-details__summary-text')
         this.reviewReasonsList = page.locator('[data-test="review-reasons-list"]')
-        this.viewReasonLink = page.locator('button:has-text("View")')
+        this.viewReasonLink = page.getByRole('link', { name: /^View$/ })
     }
 
     async clickNeedReviewList(): Promise<void> {
@@ -27,7 +27,7 @@ export default class NeedReviewPage extends BasePage {
         await this.viewReasonLink.click()
     }
 
-     async reviewReasonsListContains(text: string): Promise<boolean> {
+    async reviewReasonsListContains(text: string): Promise<boolean> {
         return await this.reviewReasonsList.locator(`text=${text}`).isVisible();
     }
 
