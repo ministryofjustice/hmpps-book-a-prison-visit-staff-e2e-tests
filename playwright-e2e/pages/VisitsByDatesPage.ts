@@ -50,15 +50,15 @@ export default class VisitsByDatesPage extends BasePage {
     }
 
     async getBookedOnDate(): Promise<string> {
-        return this.bookedOnDate.innerText()
+        return this.bookedOnDate.first().innerText()
     }
 
     async getPrisonerName(): Promise<string> {
-        return this.prisonerName.innerText()
+        return this.prisonerName.first().innerText()
     }
 
     async getPrisonerNumber(): Promise<string> {
-        return this.prisonerNumber.innerText()
+        return this.prisonerNumber.first().innerText()
     }
    
     async getPrisonerRoomName(): Promise<string> {

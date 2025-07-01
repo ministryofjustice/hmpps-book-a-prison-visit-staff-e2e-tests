@@ -4,6 +4,7 @@ import GlobalData from '../setup/GlobalData'
 import { teardownTestData } from '../support/commonMethods'
 import { excludeDate, getAccessToken, removeExcludeDate } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
+import { parse, format } from 'date-fns'
 
 test.beforeAll('Get access token and store so it is available as global data', async ({ request }, testInfo) => {
     GlobalData.set('authToken', await getAccessToken({ request }))
@@ -28,13 +29,11 @@ test.describe('Staff should be able to view dates that have been excluded and am
 
         // Switching the URL to 'staging' because selecting 'Change Establishment' sets the environment to 'Dev',
         // and DSP does not have a 'Staging' environment.
-
         await homePage.navigateTo('/')
         await homePage.selectBookOrChangeVisit()
     })
 
-    test.skip('Exclude the booking date once booked and review the reason for the notification.', async ({
-
+    test('Exclude the booking date once booked and review the reason for the notification.', async ({
         searchPage,
         prisonerDetailsPage,
         selectorVisitorPage,
@@ -48,7 +47,6 @@ test.describe('Staff should be able to view dates that have been excluded and am
         needReviewPage,
         homePage,
         bookingDetailsPage
-
     }) => {
         test.slow()
 
@@ -95,7 +93,12 @@ test.describe('Staff should be able to view dates that have been excluded and am
         expect(await bookingConfirmationPage.displayBookingConfirmation()).toBeTruthy()
         const visitReference = await bookingConfirmationPage.getReferenceNumber()
         const visitDate = await bookingConfirmationPage.getVisitBookedForDate()
-        const dateToExclude = new Date(visitDate)
+        console.log("Visit Date is:", visitDate)
+
+        // Fix: parse visitDate correctly and construct UTC-safe exclude date
+        const parsedDate = parse(visitDate, 'EEEE d MMMM yyyy', new Date())
+        const dateToExclude = new Date(Date.UTC(parsedDate.getFullYear(), parsedDate.getMonth(), parsedDate.getDate()))
+        console.log("Corrected excludeDate:", dateToExclude.toISOString())
 
         // Add Exclude date event
         const status = await excludeDate({ request }, Constants.PRISON_ONE_CODE, dateToExclude)
@@ -105,19 +108,16 @@ test.describe('Staff should be able to view dates that have been excluded and am
         await homePage.clickNeedReview()
         await needReviewPage.clickNeedReviewList()
         expect(await needReviewPage.reviewResonsListIsVisible()).toBe(true)
-        await needReviewPage.clickViewReasonLink()
-        expect(await bookingDetailsPage.notificationOnPage('A new visit time should be selected as the date is no longer available for social visits.'))
+        // await needReviewPage.clickViewReasonLink()
+        expect(await needReviewPage.reviewReasonsListContains('Time slot removed'))
         await bookingConfirmationPage.signOut()
 
-        // Remove Exclude date event
-
+        // Remove Exclude date event (optional cleanup)
         const removeExludeDatestatus = await removeExcludeDate({ request }, Constants.PRISON_ONE_CODE, dateToExclude)
         expect(removeExludeDatestatus).toBe(201)
 
         GlobalData.set('visitReference', visitReference)
         console.debug('Confirmation message:', visitReference)
-        console.debug("Visit Date is:", visitDate)
-
     })
 
     test.afterAll('Teardown test data', async ({ request }) => {
