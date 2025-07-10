@@ -1,5 +1,5 @@
 import { BasePage } from "./BasePage"
-import { Locator, Page } from "@playwright/test"
+import { expect, Locator, Page } from "@playwright/test"
 
 export default class VisitsByDatesPage extends BasePage {
     private readonly viewAnotherDateButton: Locator;
@@ -12,6 +12,8 @@ export default class VisitsByDatesPage extends BasePage {
     private readonly prisonerNumber: Locator
     private readonly visitRoomName: Locator
     private readonly availableRooms: Locator
+    private readonly dateInput: Locator
+    private readonly openCalendarButton: Locator
 
     constructor(page: Page) {
         super(page);
@@ -25,6 +27,9 @@ export default class VisitsByDatesPage extends BasePage {
         this.prisonerNumber = page.locator('[data-test="prisoner-number"]')
         this.visitRoomName = page.locator('[data-test="visit-room-caption"]')
         this.availableRooms = page.locator('h4')
+        this.dateInput = page.locator('#date')
+        this.openCalendarButton = page.locator('[data-test="another-date-button"]')
+
     }
 
     async clickViewAnotherDateButton(): Promise<void> {
@@ -33,7 +38,7 @@ export default class VisitsByDatesPage extends BasePage {
     }
 
     async clickViewButton(): Promise<void> {
-        await this.viewButton.waitFor({state:"visible"})
+        await this.viewButton.waitFor({ state: "visible" })
         await this.viewButton.click()
     }
 
@@ -60,7 +65,7 @@ export default class VisitsByDatesPage extends BasePage {
     async getPrisonerNumber(): Promise<string> {
         return this.prisonerNumber.first().innerText()
     }
-   
+
     async getPrisonerRoomName(): Promise<string> {
         return this.visitRoomName.innerText()
     }
@@ -68,5 +73,22 @@ export default class VisitsByDatesPage extends BasePage {
     async getAvailbleRoomsName(): Promise<string> {
         const rooms = await this.availableRooms.textContent()
         return rooms || ''
+    }
+
+    async openCalendar() {
+        await this.openCalendarButton.click()
+        await this.page.waitForTimeout(500)
+    }
+
+    async enterBookingDate(formattedDate: string) {
+        await this.openCalendar()
+
+        // Wait until input is visible and editable (CI-safe)
+        await expect(this.dateInput).toBeVisible({ timeout: 10000 })
+        await expect(this.dateInput).toBeEditable({ timeout: 5000 })
+        
+        // Clear and re-fill (some date pickers resist direct overwrite)
+        await this.dateInput.fill('')
+        await this.dateInput.fill(formattedDate)
     }
 }
