@@ -77,7 +77,9 @@ export default class VisitsByDatesPage extends BasePage {
 
     async openCalendar() {
         await this.openCalendarButton.click()
-        await this.page.waitForTimeout(500)
+
+        // Wait until the calendar popup or date input becomes visible
+        await this.page.waitForSelector('#date', { state: 'visible', timeout: 5000 })
     }
 
     async enterBookingDate(formattedDate: string) {
