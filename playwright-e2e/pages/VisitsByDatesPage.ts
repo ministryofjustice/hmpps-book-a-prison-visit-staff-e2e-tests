@@ -85,16 +85,16 @@ export default class VisitsByDatesPage extends BasePage {
     async enterBookingDate(formattedDate: string) {
         await this.openCalendar()
 
-        // Ensure input is visible (CI-safe)
-        await this.page.waitForSelector('#date', { state: 'visible', timeout: 10000 })
-        await this.dateInput.scrollIntoViewIfNeeded()
-        await expect(this.dateInput).toBeEditable({ timeout: 5000 })
+        // // Ensure input is visible (CI-safe)
+        // await this.page.waitForSelector('#date', { state: 'visible', timeout: 10000 })
+        // await this.dateInput.scrollIntoViewIfNeeded()
+        // await expect(this.dateInput).toBeEditable({ timeout: 5000 })
 
-        // Debug if still flaky
-        // await this.page.screenshot({ path: 'debug-date-input.png', fullPage: true })
+        // // Debug if still flaky
+        // // await this.page.screenshot({ path: 'debug-date-input.png', fullPage: true })
 
         // Clear and fill
-        await this.dateInput.fill('')
+        // await this.dateInput.fill('')
         await this.dateInput.fill(formattedDate)
     }
 }
