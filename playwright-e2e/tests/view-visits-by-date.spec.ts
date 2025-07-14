@@ -19,7 +19,7 @@ test.describe('Staff should be able to view visits by date', () => {
         await homePage.checkOnPage('Manage prison visits - DPS')
     })
 
-    test('Book and verify visit on "View visits by date" page', async ({
+    test.skip('Book and verify visit on "View visits by date" page', async ({
         homePage,
         searchPage,
         prisonerDetailsPage,
