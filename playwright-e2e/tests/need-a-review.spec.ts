@@ -22,7 +22,7 @@ test.describe('Staff should be able to review visits', () => {
         needReviewPage
 
     }) => {
-        expect(await needReviewPage.checkOnPage('Visit bookings that need review - Manage prison visits - DPS')).toBeTruthy
+        expect(await needReviewPage.checkOnPage('Visits that need review - Manage prison visits - DPS')).toBeTruthy
         await needReviewPage.clickNeedReviewList()
         // Display reasons for review checklist 
         expect(await needReviewPage.reviewResonsListIsVisible()).toBe(true)
