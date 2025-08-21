@@ -1,56 +1,43 @@
 version: 2.1
-
 orbs:
   hmpps: ministryofjustice/hmpps@9
-
 jobs:
   build-and-test:
     docker:
       - image: mcr.microsoft.com/playwright:v1.51.0-jammy
     circleci_ip_ranges: true
-
     steps:
       - checkout
-
       - attach_workspace:
           at: ~/app
-
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
-
       - run:
           name: Install Dependencies
           command: npm ci --no-audit
-
       - save_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - node_modules
             - ~/.cache
-
       - run:
           name: Show Node and NPM Versions
           command: |
             node -v
             npm -v
-
       - run:
           name: Run Playwright Tests
           command: npm run test:ci
-
       - run:
           name: Generate JUnit test results
           command: |
             mkdir -p test-results
             cp results.xml test-results/ || true
-
       - store_test_results:
           path: test-results
-
       - store_artifacts:
           path: playwright-report
           destination: playwright-html-report
-
 workflows:
   build-and-test:
     jobs:
