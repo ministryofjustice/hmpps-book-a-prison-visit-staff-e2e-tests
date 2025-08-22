@@ -1,5 +1,7 @@
 import { APIRequestContext } from '@playwright/test'
 import globalData from '../setup/GlobalData'
+import { IApplication } from './data/IApplication'
+import { format } from "date-fns"
 
 const testHelperUri = process.env.TEST_HELPER_API_URL
 
@@ -40,9 +42,9 @@ export const deleteVisit = async ({ request }: { request: APIRequestContext }, v
   return response.status()
 }
 
-export const deleteTemplate = async ({ request }: { request: APIRequestContext }, visitReference: string) => {
+export const deleteTemplate = async ({ request }: { request: APIRequestContext }, templateId: string) => {
   const accessToken = globalData.get('authToken')
-  const response = await request.put(`${testHelperUri}/test/template/${visitReference}/delete`, {
+  const response = await request.put(`${testHelperUri}/test/template/${templateId}/delete`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
@@ -73,7 +75,6 @@ export const cancelVisit = async ({ request }: { request: APIRequestContext }, v
   })
   return response.status()
 }
-
 
 export const clearVisits = async ({ request }: { request: APIRequestContext }, prisonerNumber: string) => {
   const accessToken = globalData.get('authToken')
@@ -141,19 +142,47 @@ export const updateClosedSessionCapacity = async (
   return response.status()
 }
 
-export const createVisit = async ({ request }: { request: APIRequestContext }, applicationReference: string) => {
+export const createVisit = async (
+  { request }: { request: APIRequestContext },
+  applicationReference: string,
+) => {
   const accessToken = globalData.get('authToken')
-  const response = await request.post(`${testHelperUri}/test/visit/${applicationReference}/book`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  })
+  const abc = `${testHelperUri}/test/visit/${applicationReference}/book?isRequestBooking=true`
+  console.log(abc)
 
-  const res = {
-    status: response.status(),
-    visitRef: await response.text(),
+  const response = await request.post(
+    `${testHelperUri}/test/visit/${applicationReference}/book?isRequestBooking=true`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    },
+  )
+
+  let responseBody: any
+  let visitRef: string | null = null
+
+  try {
+    // Try parsing as JSON
+    responseBody = await response.json()
+    visitRef =
+      responseBody.visitReference ||
+      responseBody.reference ||
+      responseBody.id ||
+      null
+  } catch {
+    // Fallback: treat response as plain text
+    responseBody = await response.text()
+    visitRef = responseBody || null
   }
-  return res
+
+  return {
+    status: response.status(),
+    visitRef,
+    raw: responseBody, // always keep the raw for debugging
+  }
+
 }
 
 export const excludeDate = async (
@@ -208,7 +237,6 @@ export const excludeDate = async (
   }
 }
 
-
 export const createSessionTemplate = async (
   { request }: { request: APIRequestContext },
   sessionStartDateTime: Date,
@@ -220,19 +248,17 @@ export const createSessionTemplate = async (
   incentive: string | null,
   category: string | null,
   disableAllOtherSessionsForSlotAndPrison: boolean,
-  sessionName: string
-): Promise<number> => {
+  sessionName: string,
+  sessionEndDateTime: Date
+): Promise<{ status: number; templateId: string | null }> => {
   try {
-    // Retrieve access token
     const accessToken = globalData.get('authToken')
-    if (!accessToken) {
-      throw new Error('Access token not found')
-    }
+    if (!accessToken) throw new Error('Access token not found')
 
-    // Prepare the request payload
     const payload = {
       prisonCode,
-      sessionStartDateTime: sessionStartDateTime.toISOString(), // Format Date for API
+      sessionStartDateTime: format(sessionStartDateTime, "yyyy-MM-dd'T'HH:mm:ss"),
+      sessionEndDateTime: format(sessionEndDateTime, "yyyy-MM-dd'T'HH:mm:ss"),
       weeklyFrequency,
       closedCapacity,
       openCapacity,
@@ -240,34 +266,33 @@ export const createSessionTemplate = async (
       incentive,
       category,
       disableAllOtherSessionsForSlotAndPrison,
-      sessionName
+      sessionName,
     }
 
-    // Send the PUT request
     const response = await request.put(
       `${testHelperUri}/test/prison/${prisonCode}/template/add`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json', // Ensure correct content type
+          'Content-Type': 'application/json',
         },
-        data: payload, // Pass the payload
+        data: payload,
       }
     )
 
-    // Handle response
+    // The API returns plain text reference, not JSON
+    const templateId = (await response.text()) || null
+
     if (!response.ok()) {
-      const errorMessage = await response.text()
-      throw new Error(
-        `Failed to create session template: ${response.status()} - ${errorMessage}`
-      )
+      console.error('Failed to create template', { status: response.status(), templateId })
+    } else {
+      console.log('✅ Template created:', { status: response.status(), templateId })
     }
 
-    return response.status()
-
+    return { status: response.status(), templateId }
   } catch (error) {
     console.error('Error in createSessionTemplate:', error)
-    throw error;
+    throw error
   }
 }
 
@@ -367,4 +392,48 @@ export const releasePrisoner = async ({
     console.error("Error releasing prisoner:", error)
     throw new Error("Failed to release prisoner")
   }
+}
+
+
+export const createApplication = async (
+  { request }: { request: APIRequestContext },
+  application: IApplication
+) => {
+  const accessToken = globalData.get('authToken')
+  const response = await request.put(`${testHelperUri}/test/application/create`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: application,
+  })
+
+  let body: any
+  try {
+    body = await response.json()
+  } catch {
+    body = await response.text()
+  }
+
+  // If backend just returns a string, treat it as the applicationRef
+  const applicationRef =
+    typeof body === 'string'
+      ? body
+      : body?.applicationRef ?? body?.raw ?? body?.body ?? null
+
+  const res = {
+    status: response.status(),
+    applicationRef,
+    body,
+  }
+
+  if (res.status !== 200 || !res.applicationRef) {
+    console.error('Create Application failed', {
+      payload: application,
+      response: res,
+    })
+  } else {
+    console.log(' Create Application success:', res)
+  }
+
+  return res
 }

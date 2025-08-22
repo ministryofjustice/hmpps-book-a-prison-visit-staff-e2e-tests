@@ -10,8 +10,9 @@ export abstract class BasePage {
     private readonly accountMenu: Locator
     private readonly yourAccountLink: Locator
     private readonly signOutLink: Locator
-    private readonly submitButton : Locator
-    private readonly backToHomeBtn : Locator
+    private readonly submitButton: Locator
+    private readonly backToHomeBtn: Locator
+    protected readonly alertHeading: Locator
 
     constructor(page: Page) {
         this.page = page
@@ -22,7 +23,8 @@ export abstract class BasePage {
         this.signOutLink = page.getByRole('link', { name: 'Sign out' })
         this.yourAccountLink = page.getByRole('link', { name: 'Your account' })
         this.submitButton = page.getByRole('button', { name: 'Submit' })
-        this.backToHomeBtn = page.getByRole('button', {name: 'Go to manage prison visits'})
+        this.backToHomeBtn = page.getByRole('button', { name: 'Go to manage prison visits' })
+        this.alertHeading = page.locator('h2.moj-alert__heading')
     }
 
     private async waitForPageToLoad(): Promise<void> {
@@ -51,7 +53,7 @@ export abstract class BasePage {
     async clickOnSubmitButton(): Promise<void> {
         await this.submitButton.click()
     }
-    
+
     async pageHasText(textToVerify: string): Promise<boolean> {
         // Wait for the text to be visible on the page
         const isVisible = await this.page.locator(`text=${textToVerify}`).isVisible()
@@ -62,4 +64,9 @@ export abstract class BasePage {
     async clickOnBackToHomeBtn(): Promise<void> {
         await this.backToHomeBtn.click()
     }
+
+    async verifyAlertText(expectedText: string): Promise<void> {
+        await expect(this.alertHeading).toContainText(expectedText)
+    }
+
 }

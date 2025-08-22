@@ -1,8 +1,8 @@
 import { test, expect } from '../fixtures/PageFixtures'
 import Constants from '../setup/Constants'
 import GlobalData from '../setup/GlobalData'
-import { teardownTestData } from '../support/commonMethods'
-import { createSessionTemplate, getAccessToken, deleteVisit, } from '../support/testingHelperClient'
+import { teardownTestData, loginAndNavigate } from '../support/commonMethods'
+import { createSessionTemplate, getAccessToken } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
 
 // Set up global data before all tests
@@ -12,17 +12,12 @@ test.beforeAll('Get access token and store so it is available as global data', a
 })
 
 test.describe('Staff should be able to book slots for various locations within the prison', () => {
-    // Common setup for each test
-    test.beforeEach(async ({ loginPage, homePage }) => {
 
-        await loginPage.navigateTo('/')
-        await loginPage.checkOnPage('HMPPS Digital Services - Sign in')
-        await loginPage.signInWith(UserType.USER_FOUR)
-        await homePage.displayBookOrChangeaVisit()
-        await homePage.checkOnPage('Manage prison visits - DPS')
-        await homePage.selectBookOrChangeVisit()
+    // Use common login and navigation before each test
+    test.beforeEach(async ({ page }) => {
+        await loginAndNavigate(page, UserType.USER_FOUR)
     })
-    // Test case: Book an open slot
+
     test("Book an open slot for a given location", async ({
         searchPage,
         prisonerDetailsPage,
@@ -35,45 +30,58 @@ test.describe('Staff should be able to book slots for various locations within t
         bookingConfirmationPage,
         visitTypePage,
         request
-
     }) => {
         test.slow()
-        // Create a session template
-        const sessionSlotTime = new Date();
-        sessionSlotTime.setDate(sessionSlotTime.getDate() + 2); // Add 2 days
-        sessionSlotTime.setHours(9, 0, 0, 0); // Set to 9:00 AM
-        const prisonCode = "DHI"
-        const prisonerNumber = 'A8899DZ'
-        let status = await createSessionTemplate({ request }, sessionSlotTime, Constants.PRISON_TWO_CODE, 1, 0, 1, "I-1-003", null, null, true, "Automation Tests")
-        expect(status).toBe(201)
 
-        // Perform search and prisoner details validation    
+        // Create a session template
+        const sessionSlotTime = new Date()
+        sessionSlotTime.setDate(sessionSlotTime.getDate() + 2)
+        sessionSlotTime.setHours(9, 0, 0, 0)
+        const sessionEndTime = new Date(sessionSlotTime)
+        sessionEndTime.setHours(10, 0, 0, 0)
+
+        const { status: templateStatus, templateId } = await createSessionTemplate(
+            { request },
+            sessionSlotTime,
+            Constants.PRISON_TWO_CODE,
+            1,
+            0,
+            1,
+            "I-1-003",
+            null,
+            null,
+            true,
+            "Automation Tests",
+            sessionEndTime
+        )
+        expect(templateStatus).toBe(201)
+        expect(templateId).toBeTruthy()
+
+        // Perform search and prisoner details validation
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
         await searchPage.enterPrisonerNumber(Constants.PRISONER_FOUR)
         await searchPage.selectPrisonerfromResults()
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
-        // Select visitors and book a slot    
+        // Select visitors and visit type
         expect(await selectorVisitorPage.checkOnPage('Select visitors - Manage prison visits - DPS'))
         await selectorVisitorPage.selectFirstVisitor()
         await selectorVisitorPage.continueToNextPage()
         await visitTypePage.selectVisitType('open')
         await visitTypePage.continueToNextPage()
 
+        // Select time slot
         expect(await selectDateTimePage.checkOnPage('Select date and time of visit - Manage prison visits - DPS'))
-        expect(await selectDateTimePage.headerOnPage('Select date and time of visit'))
         await selectDateTimePage.selectFirstAvailableSlot()
         await selectDateTimePage.continueToNextPage()
 
         // Additional support selection
         expect(await additionalSupportPage.checkOnPage('Is additional support needed for any of the visitors? - Manage prison visits - DPS'))
-        expect(await additionalSupportPage.headerOnPage('Is additional support needed for any of the visitors?'))
         await additionalSupportPage.selectNoAdditionalSupportRequired()
         await additionalSupportPage.continueToNextPage()
 
         // Main contact selection
         await mainContactPage.checkOnPage('Who is the main contact for this booking? - Manage prison visits - DPS')
-        expect(await mainContactPage.headerOnPage('Who is the main contact for this booking?'))
         await mainContactPage.selectMainContactForBooking()
         await mainContactPage.selectNoPhoneNumberProvided()
         const mainContact = await mainContactPage.getMainContactName()
@@ -81,29 +89,23 @@ test.describe('Staff should be able to book slots for various locations within t
 
         // Booking method
         await bookingMethodPage.checkOnPage('How was this booking requested? - Manage prison visits - DPS')
-        expect(await bookingMethodPage.headerOnPage('How was this booking requested?'))
         await bookingMethodPage.selectBookingMethod()
         await bookingMethodPage.continueToNextPage()
 
         // Complete booking
         await checkYourBookingPage.checkOnPage('Check the visit details before booking - Manage prison visits - DPS')
-        expect(await checkYourBookingPage.headerOnPage('Check the visit details before booking'))
         const mainContactNameOnDetails = await checkYourBookingPage.getMainContactName()
         expect(mainContactNameOnDetails).toContain(mainContact)
         await checkYourBookingPage.selectSubmitBooking()
         await bookingConfirmationPage.checkOnPage('Booking confirmed - Manage prison visits - DPS')
-        expect(await bookingConfirmationPage.headerOnPage('Booking confirmed'))
         expect(await bookingConfirmationPage.displayBookingConfirmation()).toBeTruthy()
         const visitReference = await bookingConfirmationPage.getReferenceNumber()
         await bookingConfirmationPage.signOut()
 
-        // Store visit reference
         GlobalData.set('visitReference', visitReference)
         console.debug('Confirmation message:', visitReference)
-
     })
 
-    // Test case: Book a closed slot
     test("Book a closed slot that matches prisoner's location", async ({
         searchPage,
         prisonerDetailsPage,
@@ -116,72 +118,74 @@ test.describe('Staff should be able to book slots for various locations within t
         bookingConfirmationPage,
         request,
         visitTypePage
-
     }) => {
         test.slow()
-        // Create a session template
-        const sessionSlotTime = new Date();
-        sessionSlotTime.setDate(sessionSlotTime.getDate() + 2); // Add 2 days
-        sessionSlotTime.setHours(9, 0, 0, 0); // Set to 9:00 AM
-        let status = await createSessionTemplate({ request }, sessionSlotTime, Constants.PRISON_TWO_CODE, 1, 1, 0, "I-1-003", null, null, true, "Automation Tests")
-        expect(status).toBe(201)
 
-        // Perform search and prisoner details validation        
+        const sessionSlotTime = new Date()
+        sessionSlotTime.setDate(sessionSlotTime.getDate() + 2)
+        sessionSlotTime.setHours(9, 0, 0, 0)
+        const sessionEndTime = new Date(sessionSlotTime)
+        sessionEndTime.setHours(10, 0, 0, 0)
+
+        const { status: templateStatus, templateId } = await createSessionTemplate(
+            { request },
+            sessionSlotTime,
+            Constants.PRISON_TWO_CODE,
+            1,
+            1,
+            0,
+            "I-1-003",
+            null,
+            null,
+            true,
+            "Automation Tests",
+            sessionEndTime
+        )
+        expect(templateStatus).toBe(201)
+        expect(templateId).toBeTruthy()
+
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
         await searchPage.enterPrisonerNumber(Constants.PRISONER_FOUR)
         await searchPage.selectPrisonerfromResults()
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
-        // Select visitors and book a slot   
         expect(await selectorVisitorPage.checkOnPage('Select visitors - Manage prison visits - DPS'))
         await selectorVisitorPage.selectFirstVisitor()
         await selectorVisitorPage.continueToNextPage()
         await visitTypePage.selectVisitType('closed')
         await visitTypePage.continueToNextPage()
+
         expect(await selectDateTimePage.checkOnPage('Select date and time of visit - Manage prison visits - DPS'))
-        expect(await selectDateTimePage.headerOnPage('Select date and time of visit'))
         await selectDateTimePage.selectFirstAvailableSlot()
         await selectDateTimePage.continueToNextPage()
 
-        // Additional support selection
         expect(await additionalSupportPage.checkOnPage('Is additional support needed for any of the visitors? - Manage prison visits - DPS'))
-        expect(await additionalSupportPage.headerOnPage('Is additional support needed for any of the visitors?'))
         await additionalSupportPage.selectNoAdditionalSupportRequired()
         await additionalSupportPage.continueToNextPage()
 
-        // Main contact selection
         await mainContactPage.checkOnPage('Who is the main contact for this booking? - Manage prison visits - DPS')
-        expect(await mainContactPage.headerOnPage('Who is the main contact for this booking?'))
         await mainContactPage.selectMainContactForBooking()
         await mainContactPage.selectNoPhoneNumberProvided()
         const mainContact = await mainContactPage.getMainContactName()
         await mainContactPage.continueToNextPage()
 
-        // Booking method
         await bookingMethodPage.checkOnPage('How was this booking requested? - Manage prison visits - DPS')
-        expect(await bookingMethodPage.headerOnPage('How was this booking requested?'))
         await bookingMethodPage.selectBookingMethod()
         await bookingMethodPage.continueToNextPage()
 
-        // Complete Booking
         await checkYourBookingPage.checkOnPage('Check the visit details before booking - Manage prison visits - DPS')
-        expect(await checkYourBookingPage.headerOnPage('Check the visit details before booking'))
         const mainContactNameOnDetails = await checkYourBookingPage.getMainContactName()
         expect(mainContactNameOnDetails).toContain(mainContact)
         await checkYourBookingPage.selectSubmitBooking()
         await bookingConfirmationPage.checkOnPage('Booking confirmed - Manage prison visits - DPS')
-        expect(await bookingConfirmationPage.headerOnPage('Booking confirmed'))
         expect(await bookingConfirmationPage.displayBookingConfirmation()).toBeTruthy()
         const visitReference = await bookingConfirmationPage.getReferenceNumber()
         await bookingConfirmationPage.signOut()
 
-        // Store visit reference
         GlobalData.set('visitReference', visitReference)
         console.debug('Confirmation message:', visitReference)
-
     })
 
-    // Test case - No slots are displayed as prinsoner doesn't match the location template
     test("No slots are displayed as the prisoner doesn't match the location set", async ({
         searchPage,
         prisonerDetailsPage,
@@ -189,42 +193,51 @@ test.describe('Staff should be able to book slots for various locations within t
         selectDateTimePage,
         request,
         visitTypePage
-
     }) => {
         test.slow()
-        // Create a session template
-        const sessionSlotTime = new Date();
-        sessionSlotTime.setDate(sessionSlotTime.getDate() + 2); // Add 2 days
-        sessionSlotTime.setHours(9, 0, 0, 0); // Set to 9:00 AM
-        const prisonCode = "DHI"
-        const prisonerNumber = 'A8899DZ'
-        let status = await createSessionTemplate({ request }, sessionSlotTime, Constants.PRISON_TWO_CODE, 1, 0, 1, "IM-NOT-HERE", null, null, true, "Automation Tests")
-        expect(status).toBe(201)
-        console.log(sessionSlotTime)
 
-        // Perform search and prisoner details validation     
+        const sessionSlotTime = new Date()
+        sessionSlotTime.setDate(sessionSlotTime.getDate() + 2)
+        sessionSlotTime.setHours(9, 0, 0, 0)
+        const sessionEndTime = new Date(sessionSlotTime)
+        sessionEndTime.setHours(10, 0, 0, 0)
+
+        const { status: templateStatus, templateId } = await createSessionTemplate(
+            { request },
+            sessionSlotTime,
+            Constants.PRISON_TWO_CODE,
+            1,
+            0,
+            1,
+            "IM-NOT-HERE",
+            null,
+            null,
+            true,
+            "Automation Tests",
+            sessionEndTime
+        )
+        expect(templateStatus).toBe(201)
+        expect(templateId).toBeTruthy()
+
         await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
         await searchPage.enterPrisonerNumber(Constants.PRISONER_FOUR)
         await searchPage.selectPrisonerfromResults()
         await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
-        // Select visitors and book a slot   
         expect(await selectorVisitorPage.checkOnPage('Select visitors - Manage prison visits - DPS'))
         await selectorVisitorPage.selectFirstVisitor()
         await selectorVisitorPage.continueToNextPage()
         await visitTypePage.selectVisitType('open')
         await visitTypePage.continueToNextPage()
 
-        // 9 am slot is not displayed as the prisoner doesn't match the location
         expect(await selectDateTimePage.checkOnPage('Select date and time of visit - Manage prison visits - DPS'))
-        expect(await selectDateTimePage.headerOnPage('Select date and time of visit'))
         expect(await selectDateTimePage.pageHasText('There are no available time slots for this prisoner.'))
-        //Signout of the service 
         await selectDateTimePage.signOut()
     })
 
-        test.afterAll('Teardown test data', async ({ request }) => {
-            await teardownTestData(request);
-        })
+    test.afterAll('Teardown test data', async ({ request }) => {
+        await teardownTestData(request)
+        GlobalData.clear()
+        console.log('Global data cache cleared.')
+    })
 })
-

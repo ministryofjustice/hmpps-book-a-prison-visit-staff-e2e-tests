@@ -6,10 +6,11 @@ export default class HomePage extends BasePage {
     private readonly bookOrChangeaVisit: Locator
     private readonly visitsByDateLink: Locator
     private readonly establishmentLink: Locator
-    private readonly establishmentName: Locator 
-    private readonly managePrisonLink : Locator
+    private readonly establishmentName: Locator
+    private readonly managePrisonLink: Locator
     private readonly blockVistDates: Locator
     private readonly needReviewLink: Locator
+    private readonly requestedVisitsLink: Locator
 
     constructor(page: Page) {
         super(page)
@@ -17,9 +18,10 @@ export default class HomePage extends BasePage {
         this.visitsByDateLink = page.getByRole('link', { name: 'View visits by date' })
         this.establishmentLink = page.locator('[data-test="change-case-load-link"]')
         this.establishmentName = page.locator('#changeCaseloadSelect')
-        this.managePrisonLink = page.getByRole('link',{name: 'Manage prison visits'})
-        this.blockVistDates = page.getByRole('link',{name: 'Block visit dates'})
+        this.managePrisonLink = page.getByRole('link', { name: 'Manage prison visits' })
+        this.blockVistDates = page.getByRole('link', { name: 'Block visit dates' })
         this.needReviewLink = page.locator('[href*="/review"]')
+        this.requestedVisitsLink = page.getByRole('link', { name: 'Requested visits' })
 
     }
 
@@ -37,11 +39,11 @@ export default class HomePage extends BasePage {
     async clickOnChangeEstablishment(): Promise<void> {
         await this.establishmentLink.click()
     }
-    
+
     async selectEstablishment(estName: string): Promise<void> {
         await this.establishmentName.selectOption(estName)
     }
-    
+
     async clickOnManagePrisonVisits(): Promise<void> {
         await this.managePrisonLink.nth(0).click()
     }
@@ -53,5 +55,9 @@ export default class HomePage extends BasePage {
     async clickNeedReview(): Promise<void> {
         await this.needReviewLink.click()
     }
- 
+
+    async clickOnRequestedVisits(): Promise<void> {
+        await this.requestedVisitsLink.click()
+    }
+
 }

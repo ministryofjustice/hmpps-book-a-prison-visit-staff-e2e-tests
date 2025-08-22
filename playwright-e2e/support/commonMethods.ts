@@ -2,7 +2,7 @@ import LoginPage from '../pages/LoginPage'
 import HomePage from '../pages/HomePage'
 import { UserType } from './UserType'
 import GlobalData from '../setup/GlobalData'
-import { deleteVisit, getAccessToken } from './testingHelperClient'
+import { deleteVisit } from './testingHelperClient'
 import { APIRequestContext } from '@playwright/test'
 
 export const loginAndNavigate = async (page: any, userType: UserType) => {
