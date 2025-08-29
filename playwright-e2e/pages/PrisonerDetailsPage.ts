@@ -9,7 +9,6 @@ export default class PrisonerDetailsPage extends BasePage {
     private readonly prisonerIncentive: Locator
     private readonly prisonerLocation: Locator
 
-
     constructor(page: Page) {
         super(page)
         this.bookAPrisonVisit = page.getByRole('button', { name: 'Book a prison visit' })
@@ -41,3 +40,4 @@ export default class PrisonerDetailsPage extends BasePage {
     }
 
 }
+
