@@ -4,7 +4,7 @@ orbs:
 jobs:
   build-and-test:
     docker:
-      - image: mcr.microsoft.com/playwright:v1.51.0-jammy
+      - image: mcr.microsoft.com/playwright:v1.55.0-jammy
     circleci_ip_ranges: true
     steps:
       - checkout
