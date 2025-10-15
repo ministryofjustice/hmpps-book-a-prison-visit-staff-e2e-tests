@@ -83,7 +83,7 @@ test.describe('Staff should be able to book a visit using VSIP service', () => {
 
         await bookingConfirmationPage.clickOnCancelBookingLink()
         await homePage.selectBookOrChangeVisit()
-        await searchPage.enterPrisonerNumber('A6036DZ')
+        await searchPage.enterPrisonerNumber(Constants.PRISONER_TWO)
         await searchPage.selectPrisonerfromResults()
         await prisonerDetailsPage.clickOnVisitRefRerenceNumber()
         await bookingDetailsPage.headerOnPage('Visit booking details')

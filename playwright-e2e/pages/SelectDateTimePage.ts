@@ -19,8 +19,8 @@ export default class SelectDateTimePage extends BasePage {
 
     // Set a value in the context
     async setToContext(key: string, value: string): Promise<void> {
-        this.contextStorage.set(key, value); // Store the key-value pair
-        console.log(`Context set: ${key} = ${value}`);
+        this.contextStorage.set(key, value) // Store the key-value pair
+        console.log(`Context set: ${key} = ${value}`)
     }
 
     // Get a value from the context
@@ -37,8 +37,6 @@ export default class SelectDateTimePage extends BasePage {
     }
 
     async selectNonAssociationTimeSlot(): Promise<void> {
-        //Click the button to expand aacordion
-        await this.showAllSlots.first().click()
         const firstAvailableSlot = this.availableSlot.first()
         await firstAvailableSlot.check()
         expect(await firstAvailableSlot.isChecked()).toBeTruthy()
@@ -78,14 +76,51 @@ export default class SelectDateTimePage extends BasePage {
     }
 
     async selectFirstAvailableSlot(): Promise<void> {
-        await this.showAllSlots.first().click()
-        const firstAvailableSlot = this.availableSlot.first()
-        await firstAvailableSlot.check()
-        expect(await firstAvailableSlot.isChecked()).toBeTruthy()
+        // Find all day links in the calendar
+        const dayLinks = this.page.locator('a[id^="day-link-"]')
+
+        const count = await dayLinks.count()
+
+        for (let i = 0; i < count; i++) {
+            const link = dayLinks.nth(i)
+
+            // Click the calendar day link
+            await link.click()
+
+            // Extract the date string from the link ID
+            const linkId = await link.getAttribute('id')
+            const dayGroupId = linkId?.replace('day-link', 'day-group')
+
+            if (!dayGroupId) continue
+
+            // Locate radio buttons inside the revealed date group
+            const slotRadioButtons = this.page.locator(`#${dayGroupId} input[type="radio"]`)
+
+            // Check if at least one slot exists
+            if (await slotRadioButtons.count() > 0) {
+                const firstAvailableSlot = slotRadioButtons.first()
+                await firstAvailableSlot.scrollIntoViewIfNeeded()
+                await firstAvailableSlot.check()
+                expect(await firstAvailableSlot.isChecked()).toBeTruthy()
+
+                const slotDetails = await firstAvailableSlot.getAttribute('data-test')
+                if (slotDetails) {
+                    await this.setToContext('SLOT_DATE_TIME', slotDetails)
+                    console.log(`Selected Slot Date/Time: ${slotDetails}`)
+                } else {
+                    console.error("No data-test attribute found on selected slot")
+                }
+
+                return // Exit after selecting the first valid slot
+            }
+        }
+
+        // If no slots were found after checking all days
+        throw new Error('No available time slots found for any calendar day')
     }
 
+
     async getDisplayedSlots(): Promise<string> {
-        await this.showAllSlots.first().click()
         const textContent = await this.displayedSlot.allTextContents()
         return textContent.length > 0 ? textContent[0].trim() : ''
     }

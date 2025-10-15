@@ -102,8 +102,8 @@ test.describe('Staff should be able to book closed or an open sessions after cha
         await visitTypePage.selectVisitType('closed')
         await visitTypePage.continueToNextPage()
 
-        expect(await selectDateTimePage.checkOnPage('Select date and time of visit - Manage prison visits - DPS'))
-        expect(await selectDateTimePage.headerOnPage('Select date and time of visit'))
+        expect(await selectDateTimePage.checkOnPage('A visit cannot be booked - Manage prison visits - DPS'))
+        expect(await selectDateTimePage.headerOnPage('A visit cannot be booked'))
         const restrictionType = await selectDateTimePage.getSessionCategory()
         expect(restrictionType).toContain('Closed')
     })
