@@ -29,7 +29,7 @@
     "@eslint/compat": "^1.1.1",
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.11.1",
-    "@playwright/test": "^1.51.0",
+    "@playwright/test": "^1.56.1",
     "@types/eslint__js": "^8.42.3",
     "@types/node": "^22.5.5",
     "allure-commandline": "^2.29.0",
