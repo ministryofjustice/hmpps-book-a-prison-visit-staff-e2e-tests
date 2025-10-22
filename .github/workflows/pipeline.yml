@@ -1,0 +1,63 @@
+name: Playwright Staff E2E Tests
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e-tests:
+    name: Run Playwright Tests
+    runs-on: [self-hosted, Linux, X64, hmpps-github-actions-runner]
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --no-audit
+
+      - name: Ensure Playwright browsers are installed
+        run: npx playwright install
+
+      - name: Show Node and NPM versions
+        run: |
+          node -v
+          npm -v
+
+      - name: Run Staff Playwright Tests
+        run: npm run test:ci
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+          HMPPS_AUTH_URL: ${{ secrets.HMPPS_AUTH_URL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          TEST_HELPER_API_URL: ${{ secrets.TEST_HELPER_API_URL }}
+          TESTING_CLIENT_ID: ${{ secrets.TESTING_CLIENT_ID }}
+          TESTING_CLIENT_SECRET: ${{ secrets.TESTING_CLIENT_SECRET }}
+          USER_ONE: ${{ secrets.USER_ONE }}
+          USER_TWO: ${{ secrets.USER_TWO }}
+          USER_THREE: ${{ secrets.USER_THREE }}
+          USER_FOUR: ${{ secrets.USER_FOUR }}
+
+      - name: Upload Playwright HTML report as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
