@@ -1,0 +1,67 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+
+  "extends": ["github>ministryofjustice/hmpps-renovate-config:node"],
+
+  "prBodyTemplate": "{{{table}}}{{{notes}}}{{{warnings}}}{{{controls}}}",
+  "prCreation": "immediate",
+  "dependencyDashboard": true,
+
+  "schedule": ["every weekend"],
+
+  "packageRules": [
+    {
+      "matchManagers": ["npm"],
+      "rangeStrategy": "bump"
+    },
+
+    {
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "all non-major npm dependencies",
+      "groupSlug": "all-npm-minor-patch",
+      "minimumReleaseAge": "3 days"
+    },
+
+    {
+      "matchDepTypes": ["engines"],
+      "enabled": false
+    },
+
+    {
+      "matchPackageNames": ["typescript"],
+      "rangeStrategy": "bump",
+      "minimumReleaseAge": null
+    },
+
+    {
+      "matchPackageNames": [
+        "typescript",
+        "typescript-eslint"
+      ],
+      "groupName": "typescript suite"
+    },
+
+    {
+      "matchPackagePrefixes": ["eslint", "@eslint"],
+      "groupName": "eslint dependencies"
+    },
+
+    {
+      "matchPackageNames": ["@types/node"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["node"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    }
+  ],
+
+  "vulnerabilityAlerts": {
+    "minimumReleaseAge": null
+  }
+}
