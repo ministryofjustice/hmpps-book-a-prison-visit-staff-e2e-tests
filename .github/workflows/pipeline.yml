@@ -7,8 +7,7 @@ on:
   pull_request:
   workflow_dispatch:
   schedule:
-    # Run every weekday at 8:00 UTC
-    - cron: '0 8 * * 1-5'
+    - cron: '0 8 * * 1-5' # Every weekday at 8:00 UTC
 
 permissions:
   contents: read
@@ -46,13 +45,13 @@ jobs:
 
       - name: Run Staff Playwright Tests
         run: npm run test:ci
-        env:
-          BASE_URL: ${{ secrets.BASE_URL }}
-          HMPPS_AUTH_URL: ${{ secrets.HMPPS_AUTH_URL }}
+        env:     
+          ENVIRONMENT: staging  
+          # Secrets only
           PASSWORD: ${{ secrets.PASSWORD }}
-          TEST_HELPER_API_URL: ${{ secrets.TEST_HELPER_API_URL }}
           TESTING_CLIENT_ID: ${{ secrets.TESTING_CLIENT_ID }}
           TESTING_CLIENT_SECRET: ${{ secrets.TESTING_CLIENT_SECRET }}
+
           USER_ONE: ${{ secrets.USER_ONE }}
           USER_TWO: ${{ secrets.USER_TWO }}
           USER_THREE: ${{ secrets.USER_THREE }}
