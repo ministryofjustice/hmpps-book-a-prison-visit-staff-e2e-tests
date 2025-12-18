@@ -19,7 +19,8 @@
     "posttest:ci": "rimraf playwright",
     "test:ci": "cross-env test_env=staging npm run test:chrome",
     "lint": "eslint . --ext .ts,.js",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "setup": "npm ci && hmpps-npm-script-run-allowlist"
   },
   "engines": {
     "node": "^24",
@@ -29,6 +30,7 @@
     "@eslint/compat": "^1.4.1",
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.39.1",
+    "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.3",
     "@playwright/test": "^1.56.1",
     "@types/eslint__js": "^8.42.3",
     "@types/node": "^24.10.0",

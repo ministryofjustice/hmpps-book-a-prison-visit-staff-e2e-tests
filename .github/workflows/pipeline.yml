@@ -33,7 +33,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci --no-audit
+        run: npm run setup 
 
       - name: Ensure Playwright browsers are installed
         run: npx playwright install
