@@ -15,7 +15,7 @@ export default class BookingConfirmationPage extends BasePage {
     this.bookingConfirmation = this.page.locator('[class$=test-booking-reference]')
     this.additionalSupportDetails = page.locator('dl dt:has-text("Additional support requests") + dd')
     this.managePrisonVisitsButton = page.getByRole('button', { name: 'Go to manage prison visits' })
-    this.cancelTheBookingLink = page.getByText('cancel the booking')
+    this.cancelTheBookingLink = page.getByText('cancel or update the booking')
     this.prisonerNumber = this.page.locator('.govuk-summary-list__value.test-visit-prisoner-number')
     this.visitDate = this.page.locator('.govuk-summary-list__value.test-visit-date')
   }
