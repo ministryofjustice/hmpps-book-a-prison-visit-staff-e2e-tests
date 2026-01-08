@@ -74,8 +74,8 @@ test.describe('Staff should be able to view visits by date', () => {
         expect(mainContactNameOnDetails).toContain(mainContact)
         await checkYourBookingPage.selectSubmitBooking()
 
-        await bookingConfirmationPage.checkOnPage('Booking confirmed - Manage prison visits - DPS')
-        await bookingConfirmationPage.headerOnPage('Booking confirmed')
+        await bookingConfirmationPage.checkOnPage('Visit confirmed - Manage prison visits - DPS')
+        await bookingConfirmationPage.headerOnPage('Visit confirmed')
         expect(await bookingConfirmationPage.displayBookingConfirmation()).toBeTruthy()
         const visitDate = await bookingConfirmationPage.getVisitBookedForDate()
         // console.log("Visit Date is:", visitDate)

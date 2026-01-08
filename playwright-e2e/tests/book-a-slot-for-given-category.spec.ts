@@ -94,7 +94,7 @@ test.describe('Staff should be able to book slots for various categories', () =>
         const mainContactNameOnDetails = await checkYourBookingPage.getMainContactName()
         expect(mainContactNameOnDetails).toContain(mainContact)
         await checkYourBookingPage.selectSubmitBooking()
-        await bookingConfirmationPage.checkOnPage('Booking confirmed - Manage prison visits - DPS')
+        await bookingConfirmationPage.checkOnPage('Visit confirmed - Manage prison visits - DPS')
         expect(await bookingConfirmationPage.displayBookingConfirmation()).toBeTruthy()
         const visitReference = await bookingConfirmationPage.getReferenceNumber()
         await bookingConfirmationPage.signOut()

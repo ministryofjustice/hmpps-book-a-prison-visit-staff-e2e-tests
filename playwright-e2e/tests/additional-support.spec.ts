@@ -76,8 +76,8 @@ test.describe('Staff should be able to book a visit for visitors that need addit
         expect(addSupportDetails).toContain('Wheelchair')
         await checkYourBookingPage.selectSubmitBooking()
 
-        await bookingConfirmationPage.checkOnPage('Booking confirmed - Manage prison visits - DPS')
-        expect(await bookingConfirmationPage.headerOnPage('Booking confirmed'))
+        await bookingConfirmationPage.checkOnPage('Visit confirmed - Manage prison visits - DPS')
+        expect(await bookingConfirmationPage.headerOnPage('Visit confirmed'))
         expect(await bookingConfirmationPage.displayBookingConfirmation()).toBeTruthy()
         const visitReference = await bookingConfirmationPage.getReferenceNumber()
         const addSupportDetailsOnConfirmationPage = await bookingConfirmationPage.getAdditionalDetailsInfo()

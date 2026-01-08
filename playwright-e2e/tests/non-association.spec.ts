@@ -88,8 +88,8 @@ test.describe('Staff should not be able to book visits for non-assocaition priso
         expect(mainContactNameOnDetails).toContain(mainContact)
         await checkYourBookingPage.selectSubmitBooking()
 
-        await bookingConfirmationPage.checkOnPage('Booking confirmed - Manage prison visits - DPS')
-        expect(await bookingConfirmationPage.headerOnPage('Booking confirmed'))
+        await bookingConfirmationPage.checkOnPage('Visit confirmed - Manage prison visits - DPS')
+        expect(await bookingConfirmationPage.headerOnPage('Visit confirmed'))
         expect(await bookingConfirmationPage.displayBookingConfirmation()).toBeTruthy()
         const visitReference = await bookingConfirmationPage.getReferenceNumber()
         const prisonerNum = await bookingConfirmationPage.getPrisonerNumber()
