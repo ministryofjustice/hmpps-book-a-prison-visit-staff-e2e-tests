@@ -74,8 +74,8 @@ test.describe('A visit is marked for review when prisoners are released after th
         expect(mainContactNameOnDetails).toContain(mainContact)
         await checkYourBookingPage.selectSubmitBooking()
 
-        await bookingConfirmationPage.checkOnPage('Booking confirmed - Manage prison visits - DPS')
-        expect(await bookingConfirmationPage.headerOnPage('Booking confirmed'))
+        await bookingConfirmationPage.checkOnPage('Visit confirmed - Manage prison visits - DPS')
+        expect(await bookingConfirmationPage.headerOnPage('Visit confirmed'))
         expect(await bookingConfirmationPage.displayBookingConfirmation()).toBeTruthy()
         const visitReference = await bookingConfirmationPage.getReferenceNumber()
 

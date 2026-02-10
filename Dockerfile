@@ -7,7 +7,7 @@ COPY . /app
 # Install dependencies
 RUN apt-get update && \
     apt-get install -y openjdk-11-jdk && \
-    npm install
+    npm run setup
 
 # Set the JAVA_HOME environment variable
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-arm64

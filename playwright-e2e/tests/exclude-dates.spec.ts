@@ -88,8 +88,8 @@ test.describe('Staff should be able to view dates that have been excluded and am
         expect(mainContactNameOnDetails).toContain(mainContact)
         await checkYourBookingPage.selectSubmitBooking()
 
-        await bookingConfirmationPage.checkOnPage('Booking confirmed - Manage prison visits - DPS')
-        expect(await bookingConfirmationPage.headerOnPage('Booking confirmed'))
+        await bookingConfirmationPage.checkOnPage('Visit confirmed - Manage prison visits - DPS')
+        expect(await bookingConfirmationPage.headerOnPage('Visit confirmed'))
         expect(await bookingConfirmationPage.displayBookingConfirmation()).toBeTruthy()
         const visitReference = await bookingConfirmationPage.getReferenceNumber()
         const visitDate = await bookingConfirmationPage.getVisitBookedForDate()
