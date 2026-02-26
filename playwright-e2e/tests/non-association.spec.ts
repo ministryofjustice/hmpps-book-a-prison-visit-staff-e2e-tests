@@ -1,8 +1,8 @@
 import { test, expect } from '../fixtures/PageFixtures'
 import Constants from '../setup/Constants'
 import GlobalData from '../setup/GlobalData'
-import { teardownTestData } from '../support/commonMethods'
-import { clearVisits, getAccessToken } from '../support/testingHelperClient'
+import { teardownTestData, registerPrisonerForCleanup } from '../support/commonMethods'
+import { getAccessToken } from '../support/testingHelperClient'
 import { UserType } from '../support/UserType'
 
 test.beforeAll('Get access token and store so it is available as global data', async ({ request }, testInfo) => {
@@ -35,6 +35,10 @@ test.describe('Staff should not be able to book visits for non-assocaition priso
 
     }) => {
         test.slow()
+         // register prisoner for clean up
+        await registerPrisonerForCleanup(Constants.PRISONER_FIVE)
+        await registerPrisonerForCleanup(Constants.PRISONER_SIX)       
+        
         await homePage.clickOnChangeEstablishment()
         await homePage.selectEstablishment('Bristol (HMP)')
         await homePage.clickOnSubmitButton()
