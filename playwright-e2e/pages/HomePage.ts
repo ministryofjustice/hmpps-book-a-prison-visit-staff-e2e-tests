@@ -16,7 +16,7 @@ export default class HomePage extends BasePage {
         super(page)
         this.bookOrChangeaVisit = page.locator('[href*="/search/prisoner"]')
         this.visitsByDateLink = page.getByRole('link', { name: 'View visits by date' })
-        this.establishmentLink = page.locator('[data-test="change-case-load-link"]')
+        this.establishmentLink = page.locator('[data-qa=connect-dps-caseload-switcher]')
         this.establishmentName = page.locator('#changeCaseloadSelect')
         this.managePrisonLink = page.getByRole('link', { name: 'Manage prison visits' })
         this.blockVistDates = page.getByRole('link', { name: 'Block visit dates' })
