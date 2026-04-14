@@ -19,7 +19,7 @@ export abstract class BasePage {
         deviceName = GlobalData.get('deviceName')
         this.pageHeader = page.locator('h1')
         this.continueButton = page.getByRole('button', { name: 'Continue' })
-        this.accountMenu = page.locator('[data-qa=connect-dps-common-header-user-name]')
+        this.accountMenu = page.locator('[data-qa=cdps-header-user-name]')
         this.signOutLink = page.getByRole('link', { name: 'Sign out' })
         this.yourAccountLink = page.getByRole('link', { name: 'Your account' })
         this.submitButton = page.getByRole('button', { name: 'Submit' })
