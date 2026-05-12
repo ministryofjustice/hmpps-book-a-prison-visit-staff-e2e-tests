@@ -18,7 +18,7 @@ export default class HomePage extends BasePage {
         this.visitsByDateLink = page.getByRole('link', { name: 'View visits by date' })
         this.establishmentLink = page.locator('[data-qa=cdps-header-caseload]')
         this.establishmentName = page.locator('#changeCaseloadSelect')
-        this.managePrisonLink = page.getByRole('link', { name: 'Social visits' })
+        this.managePrisonLink = page.getByRole('link', { name: 'Manage prison visits' })
         this.blockVistDates = page.getByRole('link', { name: 'Block visit dates' })
         this.needReviewLink = page.locator('[href*="/review"]')
         this.requestedVisitsLink = page.getByRole('link', { name: 'Requested visits' })
