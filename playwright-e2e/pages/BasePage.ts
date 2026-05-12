@@ -23,7 +23,7 @@ export abstract class BasePage {
         this.signOutLink = page.getByRole('link', { name: 'Sign out' })
         this.yourAccountLink = page.getByRole('link', { name: 'Your account' })
         this.submitButton = page.getByRole('button', { name: 'Submit' })
-        this.backToHomeBtn = page.getByRole('button', { name: 'Go to manage prison visits' })
+        this.backToHomeBtn = page.getByRole('button', { name: 'Go to social visits homepage' })
         this.alertHeading = page.locator('h2.moj-alert__heading')
     }
 
