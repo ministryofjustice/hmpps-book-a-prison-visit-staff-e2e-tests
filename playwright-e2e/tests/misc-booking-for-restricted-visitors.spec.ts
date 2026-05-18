@@ -22,11 +22,11 @@ test.describe('Ensure that minors and restricted visitors are unable to make a b
   }) => {
     test.slow()
 
-    await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
+    await searchPage.checkOnPage('Search for a prisoner - Social visits - DPS')
     await searchPage.enterPrisonerNumber(Constants.PRISONER_WITH_NO_ADULT_VISITORS)
     await searchPage.selectPrisonerfromResults()
     await prisonerDetailsPage.clickOnBookAPrisonVisit()
-    expect(await selectorVisitorPage.checkOnPage('Select visitors - Manage prison visits - DPS'))
+    expect(await selectorVisitorPage.checkOnPage('Select visitors - Social visits - DPS'))
     expect(
       await selectorVisitorPage.notificationOnPage(
         'There are no approved visitors for this prisoner. A booking cannot be made at this time.',
@@ -37,7 +37,7 @@ test.describe('Ensure that minors and restricted visitors are unable to make a b
     await searchPage.enterPrisonerNumber(Constants.PRISONER_WITH_BANNED_VISITORS)
     await searchPage.selectPrisonerfromResults()
     await prisonerDetailsPage.clickOnBookAPrisonVisit()
-    expect(await selectorVisitorPage.checkOnPage('Select visitors - Manage prison visits - DPS'))
+    expect(await selectorVisitorPage.checkOnPage('Select visitors - Social visits - DPS'))
     await selectorVisitorPage.bannedVisitorIsDisabled('Select Sammy Saunders')
   })
 })

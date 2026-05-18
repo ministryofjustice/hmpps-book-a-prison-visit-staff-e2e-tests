@@ -106,9 +106,9 @@ test.describe('Approve a requested visit', () => {
     await loginPage.signInWith(UserType.USER_ONE)
 
     await homePage.displayBookOrChangeaVisit()
-    await homePage.checkOnPage('Manage prison visits - DPS')
+    await homePage.checkOnPage('Social visits - DPS')
     await homePage.clickOnRequestedVisits()
-    expect(await requestedVisitsPage.checkOnPage('Requested visits - Manage prison visits - DPS'))
+    expect(await requestedVisitsPage.checkOnPage('Requested visits - Social visits - DPS'))
     await requestedVisitsPage.clickViewLinkForPrisoner(prisonerDetails.prisonerId)
     await visitDetailsPage.approveVisit()
     expect(await requestedVisitsPage.verifyAlertText('You approved the request and booked '))

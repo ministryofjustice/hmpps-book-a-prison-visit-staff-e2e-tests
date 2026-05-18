@@ -64,7 +64,7 @@ test.describe('Staff should be able to book slots for various incentives', () =>
     GlobalData.set('createdTemplates', createdTemplates)
 
     // Perform search and prisoner details validation
-    await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
+    await searchPage.checkOnPage('Search for a prisoner - Social visits - DPS')
     await searchPage.enterPrisonerNumber(prisonerNumber)
     await searchPage.selectPrisonerfromResults()
     const prisonerCat = await prisonerDetailsPage.getPrisonerCategory()
@@ -74,41 +74,41 @@ test.describe('Staff should be able to book slots for various incentives', () =>
     await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
     // Select visitors and book a slot
-    expect(await selectorVisitorPage.checkOnPage('Select visitors - Manage prison visits - DPS'))
+    expect(await selectorVisitorPage.checkOnPage('Select visitors - Social visits - DPS'))
     await selectorVisitorPage.selectFirstVisitor()
     await selectorVisitorPage.continueToNextPage()
 
-    expect(await selectDateTimePage.checkOnPage('Select date and time of visit - Manage prison visits - DPS'))
+    expect(await selectDateTimePage.checkOnPage('Select date and time of visit - Social visits - DPS'))
     await selectDateTimePage.selectFirstAvailableSlot()
     await selectDateTimePage.continueToNextPage()
 
     // Additional support selection
     expect(
       await additionalSupportPage.checkOnPage(
-        'Is additional support needed for any of the visitors? - Manage prison visits - DPS',
+        'Is additional support needed for any of the visitors? - Social visits - DPS',
       ),
     )
     await additionalSupportPage.selectNoAdditionalSupportRequired()
     await additionalSupportPage.continueToNextPage()
 
     // Main contact selection
-    await mainContactPage.checkOnPage('Who is the main contact for this booking? - Manage prison visits - DPS')
+    await mainContactPage.checkOnPage('Who is the main contact for this booking? - Social visits - DPS')
     await mainContactPage.selectMainContactForBooking()
     await mainContactPage.selectNoPhoneNumberProvided()
     const mainContact = await mainContactPage.getMainContactName()
     await mainContactPage.continueToNextPage()
 
     // Booking method
-    await bookingMethodPage.checkOnPage('How was this booking requested? - Manage prison visits - DPS')
+    await bookingMethodPage.checkOnPage('How was this booking requested? - Social visits - DPS')
     await bookingMethodPage.selectBookingMethod()
     await bookingMethodPage.continueToNextPage()
 
     // Complete booking
-    await checkYourBookingPage.checkOnPage('Check the visit details before booking - Manage prison visits - DPS')
+    await checkYourBookingPage.checkOnPage('Check the visit details before booking - Social visits - DPS')
     const mainContactNameOnDetails = await checkYourBookingPage.getMainContactName()
     expect(mainContactNameOnDetails).toContain(mainContact)
     await checkYourBookingPage.selectSubmitBooking()
-    await bookingConfirmationPage.checkOnPage('Visit confirmed - Manage prison visits - DPS')
+    await bookingConfirmationPage.checkOnPage('Visit confirmed - Social visits - DPS')
     expect(await bookingConfirmationPage.displayBookingConfirmation()).toBeTruthy()
     const visitReference = await bookingConfirmationPage.getReferenceNumber()
     await bookingConfirmationPage.signOut()
@@ -160,7 +160,7 @@ test.describe('Staff should be able to book slots for various incentives', () =>
     createdTemplates.push(templateId)
     GlobalData.set('createdTemplates', createdTemplates)
 
-    await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
+    await searchPage.checkOnPage('Search for a prisoner - Social visits - DPS')
     await searchPage.enterPrisonerNumber(Constants.PRISONER_THREE)
     await searchPage.selectPrisonerfromResults()
     const prisonerCat = await prisonerDetailsPage.getPrisonerCategory()
@@ -169,37 +169,37 @@ test.describe('Staff should be able to book slots for various incentives', () =>
     expect(prisonerCat).toContain('Fem Closed')
     await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
-    expect(await selectorVisitorPage.checkOnPage('Select visitors - Manage prison visits - DPS'))
+    expect(await selectorVisitorPage.checkOnPage('Select visitors - Social visits - DPS'))
     await selectorVisitorPage.selectFirstVisitor()
     await selectorVisitorPage.continueToNextPage()
 
-    expect(await selectDateTimePage.checkOnPage('Select date and time of visit - Manage prison visits - DPS'))
+    expect(await selectDateTimePage.checkOnPage('Select date and time of visit - Social visits - DPS'))
     await selectDateTimePage.selectFirstAvailableSlot()
     await selectDateTimePage.continueToNextPage()
 
     expect(
       await additionalSupportPage.checkOnPage(
-        'Is additional support needed for any of the visitors? - Manage prison visits - DPS',
+        'Is additional support needed for any of the visitors? - Social visits - DPS',
       ),
     )
     await additionalSupportPage.selectNoAdditionalSupportRequired()
     await additionalSupportPage.continueToNextPage()
 
-    await mainContactPage.checkOnPage('Who is the main contact for this booking? - Manage prison visits - DPS')
+    await mainContactPage.checkOnPage('Who is the main contact for this booking? - Social visits - DPS')
     await mainContactPage.selectMainContactForBooking()
     await mainContactPage.selectNoPhoneNumberProvided()
     const mainContact = await mainContactPage.getMainContactName()
     await mainContactPage.continueToNextPage()
 
-    await bookingMethodPage.checkOnPage('How was this booking requested? - Manage prison visits - DPS')
+    await bookingMethodPage.checkOnPage('How was this booking requested? - Social visits - DPS')
     await bookingMethodPage.selectBookingMethod()
     await bookingMethodPage.continueToNextPage()
 
-    await checkYourBookingPage.checkOnPage('Check the visit details before booking - Manage prison visits - DPS')
+    await checkYourBookingPage.checkOnPage('Check the visit details before booking - Social visits - DPS')
     const mainContactNameOnDetails = await checkYourBookingPage.getMainContactName()
     expect(mainContactNameOnDetails).toContain(mainContact)
     await checkYourBookingPage.selectSubmitBooking()
-    await bookingConfirmationPage.checkOnPage('Visit confirmed - Manage prison visits - DPS')
+    await bookingConfirmationPage.checkOnPage('Visit confirmed - Social visits - DPS')
     expect(await bookingConfirmationPage.displayBookingConfirmation()).toBeTruthy()
     const visitReference = await bookingConfirmationPage.getReferenceNumber()
     await bookingConfirmationPage.signOut()

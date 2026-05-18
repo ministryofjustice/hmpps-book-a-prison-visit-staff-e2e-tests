@@ -13,7 +13,7 @@ export const loginAndNavigate = async (page: any, userType: UserType) => {
     await loginPage.checkOnPage('HMPPS Digital Services - Sign in')
     await loginPage.signInWith(userType)
     await homePage.displayBookOrChangeaVisit()
-    await homePage.checkOnPage('Manage prison visits - DPS')
+    await homePage.checkOnPage('Social visits - DPS')
     await homePage.selectBookOrChangeVisit()
 }
 

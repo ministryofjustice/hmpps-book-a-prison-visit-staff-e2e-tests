@@ -22,7 +22,7 @@ test.describe('Error message validations', () => {
   test('Error messages on the search page', async ({ searchPage, homePage, loginPage }) => {
     await test.step('Sign in and navigate to search page', async () => {
       await loginPage.signInWith(UserType.USER_ONE)
-      await homePage.checkOnPage('Manage prison visits - DPS')
+      await homePage.checkOnPage('Social visits - DPS')
       await homePage.selectBookOrChangeVisit()
     })
 
@@ -46,7 +46,7 @@ test.describe('Error message validations', () => {
   test.skip('Error messages on "View Visits by Date" page', async ({ homePage, visitByDatesPage, loginPage }) => {
     await test.step('Sign in and navigate to Visits by Date page', async () => {
       await loginPage.signInWith(UserType.USER_ONE)
-      await homePage.checkOnPage('Manage prison visits - DPS')
+      await homePage.checkOnPage('Social visits - DPS')
       await homePage.clickOnVisitsByDate()
     })
 
@@ -71,16 +71,16 @@ test.describe('Error message validations', () => {
   }) => {
     await test.step('Sign in and navigate to Select Visit Type page', async () => {
       await loginPage.signInWith(UserType.USER_FOUR)
-      await homePage.checkOnPage('Manage prison visits - DPS')
+      await homePage.checkOnPage('Social visits - DPS')
       await homePage.selectBookOrChangeVisit()
-      await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
+      await searchPage.checkOnPage('Search for a prisoner - Social visits - DPS')
       await searchPage.enterPrisonerNumber(Constants.PRISONER_FOUR)
       await searchPage.selectPrisonerfromResults()
       await prisonerDetailsPage.clickOnBookAPrisonVisit()
     })
 
     await test.step('Validate error for no visit type selected', async () => {
-      await selectorVisitorPage.checkOnPage('Select visitors - Manage prison visits - DPS')
+      await selectorVisitorPage.checkOnPage('Select visitors - Social visits - DPS')
       await selectorVisitorPage.selectFirstVisitor()
       await selectorVisitorPage.continueToNextPage()
       await visitTypePage.headerOnPage("Check the prisoner's closed visit restrictions")
@@ -109,9 +109,9 @@ test.describe('Error message validations', () => {
 
     await test.step('Sign in and navigate to booking flow', async () => {
       await loginPage.signInWith(UserType.USER_ONE)
-      await homePage.checkOnPage('Manage prison visits - DPS')
+      await homePage.checkOnPage('Social visits - DPS')
       await homePage.selectBookOrChangeVisit()
-      await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
+      await searchPage.checkOnPage('Search for a prisoner - Social visits - DPS')
       await searchPage.enterPrisonerNumber(Constants.PRISONER_TWO)
       await searchPage.selectPrisonerfromResults()
       await prisonerDetailsPage.clickOnBookAPrisonVisit()

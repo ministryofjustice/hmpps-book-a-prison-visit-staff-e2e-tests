@@ -15,7 +15,7 @@ test.describe('Staff should be able to book closed or an open sessions after cha
     await loginPage.checkOnPage('HMPPS Digital Services - Sign in')
     await loginPage.signInWith(UserType.USER_FOUR)
     await homePage.displayBookOrChangeaVisit()
-    await homePage.checkOnPage('Manage prison visits - DPS')
+    await homePage.checkOnPage('Social visits - DPS')
   })
 
   test('Book an OPEN session after changing the establishment ', async ({
@@ -32,7 +32,7 @@ test.describe('Staff should be able to book closed or an open sessions after cha
     await homePage.clickOnSubmitButton()
     await homePage.clickOnManagePrisonVisits()
     await homePage.displayBookOrChangeaVisit()
-    await homePage.checkOnPage('Manage prison visits - DPS')
+    await homePage.checkOnPage('Social visits - DPS')
     await homePage.selectBookOrChangeVisit()
 
     // Switching the URL to 'staging' because selecting 'Change Establishment' sets the environment to 'Dev',
@@ -40,17 +40,17 @@ test.describe('Staff should be able to book closed or an open sessions after cha
 
     await homePage.navigateTo('/')
     await homePage.selectBookOrChangeVisit()
-    await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
+    await searchPage.checkOnPage('Search for a prisoner - Social visits - DPS')
     await searchPage.enterPrisonerNumber(Constants.PRISONER_WITH_OPEN_SESSIONS)
     await searchPage.selectPrisonerfromResults()
 
     await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
-    expect(await selectorVisitorPage.checkOnPage('Select visitors - Manage prison visits - DPS'))
+    expect(await selectorVisitorPage.checkOnPage('Select visitors - Social visits - DPS'))
     await selectorVisitorPage.selectFirstVisitor()
     await selectorVisitorPage.continueToNextPage()
 
-    expect(await selectDateTimePage.checkOnPage('Select date and time of visit - Manage prison visits - DPS'))
+    expect(await selectDateTimePage.checkOnPage('Select date and time of visit - Social visits - DPS'))
     expect(await selectDateTimePage.headerOnPage('Select date and time of visit'))
     const restrictionType = await selectDateTimePage.getSessionCategory()
     expect(restrictionType).toContain('Open')
@@ -76,7 +76,7 @@ test.describe('Staff should be able to book closed or an open sessions after cha
     await homePage.clickOnSubmitButton()
     await homePage.clickOnManagePrisonVisits()
     await homePage.displayBookOrChangeaVisit()
-    await homePage.checkOnPage('Manage prison visits - DPS')
+    await homePage.checkOnPage('Social visits - DPS')
     await homePage.selectBookOrChangeVisit()
 
     // Switching the URL to 'staging' because selecting 'Change Establishment' sets the environment to 'Dev',
@@ -85,20 +85,20 @@ test.describe('Staff should be able to book closed or an open sessions after cha
     await homePage.navigateTo('/')
     await homePage.selectBookOrChangeVisit()
 
-    await searchPage.checkOnPage('Search for a prisoner - Manage prison visits - DPS')
+    await searchPage.checkOnPage('Search for a prisoner - Social visits - DPS')
     await searchPage.enterPrisonerNumber(Constants.PRISONER_WITH_CLOSED_SESSIONS)
     await searchPage.selectPrisonerfromResults()
 
     await prisonerDetailsPage.clickOnBookAPrisonVisit()
 
-    expect(await selectorVisitorPage.checkOnPage('Select visitors - Manage prison visits - DPS'))
+    expect(await selectorVisitorPage.checkOnPage('Select visitors - Social visits - DPS'))
     await selectorVisitorPage.selectFirstVisitor()
     await selectorVisitorPage.continueToNextPage()
 
     await visitTypePage.selectVisitType('closed')
     await visitTypePage.continueToNextPage()
 
-    expect(await selectDateTimePage.checkOnPage('A visit cannot be booked - Manage prison visits - DPS'))
+    expect(await selectDateTimePage.checkOnPage('A visit cannot be booked - Social visits - DPS'))
     expect(await selectDateTimePage.headerOnPage('A visit cannot be booked'))
     const restrictionType = await selectDateTimePage.getSessionCategory()
     expect(restrictionType).toContain('Closed')
