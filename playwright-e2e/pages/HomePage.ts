@@ -8,7 +8,7 @@ export default class HomePage extends BasePage {
     private readonly establishmentLink: Locator
     private readonly establishmentName: Locator
     private readonly managePrisonLink: Locator
-    private readonly blockVistDates: Locator
+    private readonly blockVisitDates: Locator
     private readonly needReviewLink: Locator
     private readonly requestedVisitsLink: Locator
 
@@ -19,7 +19,7 @@ export default class HomePage extends BasePage {
         this.establishmentLink = page.locator('[data-qa=cdps-header-caseload]')
         this.establishmentName = page.locator('#changeCaseloadSelect')
         this.managePrisonLink = page.getByRole('link', { name: 'Social visits' })
-        this.blockVistDates = page.getByRole('link', { name: 'Block visit dates' })
+        this.blockVisitDates = page.getByRole('link', { name: 'Block visit dates or sessions' })
         this.needReviewLink = page.locator('[href*="/review"]')
         this.requestedVisitsLink = page.getByRole('link', { name: 'Requested visits' })
 
@@ -49,7 +49,7 @@ export default class HomePage extends BasePage {
     }
 
     async clickOnBlockVisitDates(): Promise<void> {
-        await this.blockVistDates.click()
+        await this.blockVisitDates.click()
     }
 
     async clickNeedReview(): Promise<void> {
