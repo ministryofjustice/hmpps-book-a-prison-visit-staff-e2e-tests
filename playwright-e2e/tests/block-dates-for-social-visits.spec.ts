@@ -19,8 +19,8 @@ test.describe('Staff should be able to block dates for social visits', () => {
   test('Block a vist date', async ({ homePage, blockVisitDatePage }) => {
     // Navigate to the Block Visit Dates page
     await homePage.clickOnBlockVisitDates()
-    await blockVisitDatePage.checkOnPage('Block visit dates - Social visits - DPS')
-    expect(await blockVisitDatePage.headerOnPage('Block visit dates')).toBeTruthy
+    await blockVisitDatePage.checkOnPage('Block visit dates or sessions- Social visits - DPS')
+    expect(await blockVisitDatePage.headerOnPage('Block visit dates or sessions')).toBeTruthy
 
     // Block a specific date
     const blockDate = '25/11/2026'
@@ -45,8 +45,8 @@ test.describe('Staff should be able to block dates for social visits', () => {
 
     // Navigate to Block Visit Dates page
     await homePage.clickOnBlockVisitDates()
-    await blockVisitDatePage.checkOnPage('Block visit dates - Social visits - DPS')
-    expect(await blockVisitDatePage.headerOnPage('Block visit dates')).toBeTruthy
+    await blockVisitDatePage.checkOnPage('Block visit dates or sessions - Social visits - DPS')
+    expect(await blockVisitDatePage.headerOnPage('Block visit dates or sessions')).toBeTruthy
 
     // Block the date and verify error message
     await blockVisitDatePage.enterDateToBlock(blockedDate)
