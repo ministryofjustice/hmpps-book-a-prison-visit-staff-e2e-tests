@@ -14,6 +14,7 @@ export default class Constants {
     static readonly PRISONER_TWO = "A6036DZ"
     static readonly PRISON_TWO_CODE = "DHI"
     static readonly PRISONER_THREE = "A8900DZ"
+    static readonly PRISON_THREE_CODE = "BLI"
     static readonly PRISONER_FOUR = "A8899DZ"
     static readonly PRISONER_FIVE = "A6038DZ"
     static readonly PRISONER_SIX = "A6541DZ"

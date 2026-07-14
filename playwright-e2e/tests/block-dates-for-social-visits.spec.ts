@@ -11,13 +11,22 @@ test.beforeAll('Get access token and store so it is available as global data', a
 })
 
 test.describe('Staff should be able to block dates for social visits', () => {
+  test.slow()
+
   // Set up test date for block
   const today = new Date()
   const firstOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1)
   const blockDate = format(firstOfNextMonth, 'dd/MM/yyyy')
   const blockDateFormatted = format(firstOfNextMonth, 'EEEE d MMMM yyyy')
 
-  test.beforeAll(async ({ request}) => {
+  test.beforeEach(async ({ loginPage, homePage }) => {  
+    await loginPage.navigateTo('/')
+    await loginPage.checkOnPage('HMPPS Digital Services - Sign in')
+    await loginPage.signInWith(UserType.USER_THREE)
+    await homePage.checkOnPage('Social visits - DPS')
+  })
+
+  test('Block a visit date', async ({ request, homePage, blockVisitDatePage }) => {
     // Create a session template for the day to be blocked
     // to ensure the full day / single session screen is shown
     const sessionSlotTime = firstOfNextMonth
@@ -28,7 +37,7 @@ test.describe('Staff should be able to block dates for social visits', () => {
     const { status: templateStatus, templateId } = await createSessionTemplate(
       { request },
       sessionSlotTime,
-      Constants.PRISON_ONE_CODE,
+      Constants.PRISON_THREE_CODE,
       1,
       0,
       1,
@@ -42,20 +51,6 @@ test.describe('Staff should be able to block dates for social visits', () => {
     expect(templateStatus).toBe(201)
     expect(templateId).toBeTruthy()
 
-    // Track created template
-    const createdTemplates = GlobalData.get('createdTemplates') || []
-    createdTemplates.push(templateId)
-    GlobalData.set('createdTemplates', createdTemplates)
-  })
-
-  test.beforeEach(async ({ loginPage, homePage }) => {
-    await loginPage.navigateTo('/')
-    await loginPage.checkOnPage('HMPPS Digital Services - Sign in')
-    await loginPage.signInWith(UserType.USER_THREE)
-    await homePage.checkOnPage('Social visits - DPS')
-  })
-
-  test('Block a visit date', async ({ homePage, blockVisitDatePage }) => {
     // Navigate to the Block Visit Dates page
     await homePage.clickOnBlockVisitDates()
     await blockVisitDatePage.checkOnPage('Block visit dates or sessions - Social visits - DPS')
@@ -82,6 +77,10 @@ test.describe('Staff should be able to block dates for social visits', () => {
       .toBeTruthy
 
     await blockVisitDatePage.signOut()
+
+    // Clean up - delete the created template
+    const status = await deleteTemplate({ request }, templateId ?? '')
+    console.log(`Deleted template ${templateId}, status: ${status}`)
   })
   
   test('Unblock a visit date', async ({ homePage, blockVisitDatePage }) => {
@@ -102,17 +101,5 @@ test.describe('Staff should be able to block dates for social visits', () => {
 
     // Sign out
     await blockVisitDatePage.signOut()
-  })
-
-  // Delete created session templates and clear global cache
-  test.afterAll('Delete created session templates and clear global cache', async ({ request }) => {
-    const createdTemplates = GlobalData.get('createdTemplates') || []
-    for (const templateId of createdTemplates) {
-      const status = await deleteTemplate({ request }, templateId)
-      console.log(`Deleted template ${templateId}, status: ${status}`)
-    }
-
-    GlobalData.clear()
-    console.log('Global data cache cleared.')
   })
 })
