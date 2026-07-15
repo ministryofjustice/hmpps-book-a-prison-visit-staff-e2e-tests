@@ -286,7 +286,7 @@ export const createSessionTemplate = async (
     if (!response.ok()) {
       console.error('Failed to create template', { status: response.status(), templateId })
     } else {
-      console.log('✅ Template created:', { status: response.status(), templateId })
+      console.log('✅ Template created:', { status: response.status(), payload })
     }
 
     return { status: response.status(), templateId }
