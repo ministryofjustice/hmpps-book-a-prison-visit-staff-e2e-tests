@@ -27,6 +27,7 @@ test.describe('Reject a requested visit', () => {
     homePage,
     requestedVisitsPage,
     visitDetailsPage,
+    visitRequestRejectionReasonPage,
   }, testInfo) => {
     test.slow()
     // register prisoner for clean up
@@ -110,6 +111,8 @@ test.describe('Reject a requested visit', () => {
     expect(await requestedVisitsPage.checkOnPage('Requested visits - Social visits - DPS'))
     await requestedVisitsPage.clickViewLinkForPrisoner(prisonerDetails.prisonerId)
     await visitDetailsPage.rejectVisit()
+    expect(await visitRequestRejectionReasonPage.checkOnPage('Rejection reason (optional) - Social visits - DPS'))
+    await visitRequestRejectionReasonPage.clickConfirmRejectionButton()
     expect(await requestedVisitsPage.verifyAlertText('You rejected the request to visit'))
 
     const visitReference = GlobalData.get('visitReference')

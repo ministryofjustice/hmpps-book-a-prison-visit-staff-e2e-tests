@@ -17,8 +17,9 @@ import VisitTypePage from '../pages/VisitTypePage'
 import BlockVisitDatePage from '../pages/BlockVisitDatePage'
 import NeedReviewPage from '../pages/NeedReviewPage'
 import ClearNotificationPage from '../pages/ClearNotificationPage'
-import VisitDetialsPage from '../pages/VisitDetailsPage'
+import VisitDetailsPage from '../pages/VisitDetailsPage'
 import RequestedVisitsPage from '../pages/RequestedVisitsPage'
+import VisitRequestRejectionReasonPage from '../pages/VisitRequestRejectionReasonPage'
 
 
 type PageFixtures = {
@@ -40,9 +41,9 @@ type PageFixtures = {
     blockVisitDatePage: BlockVisitDatePage
     needReviewPage: NeedReviewPage
     clearNotificationPage: ClearNotificationPage
-    visitDetailsPage: VisitDetialsPage
+    visitDetailsPage: VisitDetailsPage
     requestedVisitsPage: RequestedVisitsPage
-
+    visitRequestRejectionReasonPage: VisitRequestRejectionReasonPage
 }
 
 const test = baseTest.extend<PageFixtures>({
@@ -118,12 +119,16 @@ const test = baseTest.extend<PageFixtures>({
     },
 
     visitDetailsPage: async ({ page }, use) => {
-        await use(new VisitDetialsPage(page))
+        await use(new VisitDetailsPage(page))
     },
 
     requestedVisitsPage: async ({ page }, use) => {
         await use(new RequestedVisitsPage(page))
-    }
+    },
+
+    visitRequestRejectionReasonPage: async ({ page }, use) => {
+        await use(new VisitRequestRejectionReasonPage(page))
+    },
 
 })
 
