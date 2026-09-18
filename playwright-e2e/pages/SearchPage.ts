@@ -16,7 +16,7 @@ export default class SearchPage extends BasePage {
 
     constructor(page: Page) {
         super(page)
-        this.prisonerDetailsInput = page.getByRole('textbox')
+        this.prisonerDetailsInput = page.getByRole('searchbox')
         this.searchButton = page.getByRole('button', { name: 'Search' })
         this.firstPrisonerReturned = page.locator('#search-results-true tbody tr td:first-child a')
         this.searchByRefNumLink = page.getByTestId('search-by-reference')
